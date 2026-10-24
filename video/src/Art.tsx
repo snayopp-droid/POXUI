@@ -4,9 +4,9 @@ import type { SceneId } from "./timeline";
 
 export const ART_W = 1080;
 export const ART_H = 1250;
-const GROUND_Y = 860;
+export const GROUND_Y = 860;
 
-const rand = (seed: number) => {
+export const rand = (seed: number) => {
   const x = Math.sin(seed * 127.1 + 311.7) * 43758.5453;
   return x - Math.floor(x);
 };
@@ -28,7 +28,7 @@ export const nightLevel = (t: number) =>
     extrapolateRight: "clamp",
   });
 
-const Stars: React.FC<{ t: number; frame: number }> = ({ t, frame }) => {
+export const Stars: React.FC<{ t: number; frame: number }> = ({ t, frame }) => {
   const level = interpolate(nightLevel(t), [0.25, 0.9], [0, 1], {
     extrapolateLeft: "clamp",
     extrapolateRight: "clamp",
@@ -52,7 +52,7 @@ const Stars: React.FC<{ t: number; frame: number }> = ({ t, frame }) => {
   );
 };
 
-const Pine: React.FC<{ x: number; y: number; s: number; dark: number }> = ({ x, y, s, dark }) => {
+export const Pine: React.FC<{ x: number; y: number; s: number; dark: number }> = ({ x, y, s, dark }) => {
   const light = keyed(dark, [0, 1], ["#2f5a3c", "#0f2418"]);
   const shade = keyed(dark, [0, 1], ["#1f3d2a", "#08160f"]);
   const tiers = [0, 1, 2];
@@ -74,7 +74,7 @@ const Pine: React.FC<{ x: number; y: number; s: number; dark: number }> = ({ x, 
   );
 };
 
-const TreeLayer: React.FC<{
+export const TreeLayer: React.FC<{
   seed: number;
   count: number;
   y: number;
@@ -99,7 +99,7 @@ const TreeLayer: React.FC<{
   </g>
 );
 
-const Hills: React.FC<{ dark: number }> = ({ dark }) => (
+export const Hills: React.FC<{ dark: number }> = ({ dark }) => (
   <g>
     <polygon
       points={`0,${GROUND_Y} 0,640 180,560 360,620 520,520 720,610 900,540 1080,600 1080,${GROUND_Y}`}
@@ -112,7 +112,7 @@ const Hills: React.FC<{ dark: number }> = ({ dark }) => (
   </g>
 );
 
-const Ground: React.FC<{ dark: number }> = ({ dark }) => (
+export const Ground: React.FC<{ dark: number }> = ({ dark }) => (
   <g>
     <polygon
       points={`0,${GROUND_Y - 20} 1080,${GROUND_Y - 30} 1080,${ART_H} 0,${ART_H}`}
@@ -201,7 +201,7 @@ export const Person: React.FC<{
 };
 
 /* ---------- Реквизит сцен ---------- */
-const Fire: React.FC<{ x: number; y: number; frame: number; scale?: number }> = ({ x, y, frame, scale = 1 }) => {
+export const Fire: React.FC<{ x: number; y: number; frame: number; scale?: number }> = ({ x, y, frame, scale = 1 }) => {
   const f = 0.85 + 0.15 * Math.sin(frame * 0.7) + 0.08 * Math.sin(frame * 1.9);
   const sway = Math.sin(frame * 0.5) * 6;
   return (
@@ -217,14 +217,14 @@ const Fire: React.FC<{ x: number; y: number; frame: number; scale?: number }> = 
   );
 };
 
-const FireGlow: React.FC<{ x: number; y: number; frame: number; r: number; o: number }> = ({ x, y, frame, r, o }) => {
+export const FireGlow: React.FC<{ x: number; y: number; frame: number; r: number; o: number }> = ({ x, y, frame, r, o }) => {
   const f = 0.85 + 0.15 * Math.sin(frame * 0.7) + 0.08 * Math.sin(frame * 1.9);
   return (
     <circle cx={x} cy={y} r={r * f} fill="url(#fireGlow)" opacity={o} />
   );
 };
 
-const Stream: React.FC<{ frame: number }> = ({ frame }) => (
+export const Stream: React.FC<{ frame: number }> = ({ frame }) => (
   <g>
     <polygon points="470,720 610,720 980,1250 120,1250" fill="#2f5f86" />
     <polygon points="470,720 540,720 540,1250 120,1250" fill="#3a76a3" opacity="0.5" />
@@ -296,7 +296,7 @@ const Owl: React.FC<{ x: number; y: number; frame: number }> = ({ x, y, frame })
   );
 };
 
-const Fog: React.FC<{ frame: number; o: number }> = ({ frame, o }) => (
+export const Fog: React.FC<{ frame: number; o: number }> = ({ frame, o }) => (
   <g opacity={o}>
     {[0, 1, 2].map((i) => (
       <ellipse
