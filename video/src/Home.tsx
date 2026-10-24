@@ -405,7 +405,7 @@ const Hud: React.FC<{ t: number; frame: number; scene: SceneId }> = ({ t, frame,
     <div
       style={{
         position: "absolute",
-        top: 54,
+        top: 150,
         left: 56,
         right: 56,
         display: "flex",
@@ -437,7 +437,7 @@ const Subtitle: React.FC<{ t: number }> = ({ t }) => {
         position: "absolute",
         left: 70,
         right: 70,
-        bottom: 170,
+        bottom: 300,
         textAlign: "center",
         fontFamily: FONT,
         opacity: o,
