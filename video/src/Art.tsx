@@ -126,8 +126,8 @@ export const Ground: React.FC<{ dark: number }> = ({ dark }) => (
 );
 
 /* ---------- Персонаж ---------- */
-const Face: React.FC<{ look: number; frame: number; scared?: boolean }> = ({ look, frame, scared }) => {
-  const blink = frame % 110 < 4 ? 0.1 : 1;
+export const Face: React.FC<{ look: number; frame: number; scared?: boolean; closed?: boolean }> = ({ look, frame, scared, closed }) => {
+  const blink = closed ? 0.08 : frame % 110 < 4 ? 0.1 : 1;
   const pr = scared ? 7 : 9;
   return (
     <g>
