@@ -25,11 +25,13 @@ const BLUE = "#5ec8ff";
 const clamp = { extrapolateLeft: "clamp", extrapolateRight: "clamp" } as const;
 
 /* ---------- Персонажи (поясной портрет) ---------- */
+export type BustWho = Exclude<Who, "lira"> | "elder";
+
 type BustProps = {
   x: number;
   y: number;
   s?: number;
-  who: Exclude<Who, "lira">;
+  who: BustWho;
   frame: number;
   look?: number;
   scared?: boolean;
@@ -42,9 +44,10 @@ const SHIRT: Record<string, [string, string]> = {
   sonya: ["#7a5fb0", "#5f4a8f"],
   mikhail: ["#4a5568", "#38414f"],
   anna: ["#b24a63", "#8d3a4f"],
+  elder: ["#6b5b4a", "#54463a"],
 };
 
-const Bust: React.FC<BustProps> = ({ x, y, s = 1, who, frame, look = 0, scared, closed, talking, tint }) => {
+export const Bust: React.FC<BustProps> = ({ x, y, s = 1, who, frame, look = 0, scared, closed, talking, tint }) => {
   const [c1, c2] = SHIRT[who];
   const bob = talking ? Math.sin(frame * 0.9) * 3 : Math.sin(frame * 0.07) * 2;
   return (
@@ -65,6 +68,13 @@ const Bust: React.FC<BustProps> = ({ x, y, s = 1, who, frame, look = 0, scared, 
             <polygon points="-68,-24 -50,-72 0,-88 50,-72 68,-24 0,-48" fill="#4a2e1f" />
             <polygon points="0,-88 50,-72 68,-24 0,-48" fill="#3b2418" />
             <polygon points="64,-60 108,-40 96,-8 70,-30" fill="#3b2418" />
+          </>
+        )}
+        {who === "elder" && (
+          <>
+            <polygon points="-64,-26 -46,-66 0,-76 46,-66 64,-26 0,-40" fill="#9a9aa2" />
+            <polygon points="0,-76 46,-66 64,-26 0,-40" fill="#7d7d86" />
+            <polygon points="-40,40 40,40 30,70 -30,70" fill="#d8d8dc" opacity="0.8" />
           </>
         )}
         {who === "mikhail" && (

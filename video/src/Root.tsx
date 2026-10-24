@@ -2,9 +2,11 @@ import { Composition } from "remotion";
 import { Survival } from "./Survival";
 import { Action } from "./Action";
 import { Home } from "./Home";
+import { Dark } from "./Dark";
 import { DURATION_FRAMES, FPS, HEIGHT, WIDTH } from "./timeline";
 import { DURATION_FRAMES as ACTION_FRAMES } from "./timeline2";
 import { DURATION_FRAMES as HOME_FRAMES } from "./timeline3";
+import { DURATION_FRAMES as DARK_FRAMES } from "./timeline4";
 
 export const RemotionRoot: React.FC = () => {
   return (
@@ -29,6 +31,14 @@ export const RemotionRoot: React.FC = () => {
         id="Lira"
         component={Home}
         durationInFrames={HOME_FRAMES}
+        fps={FPS}
+        width={WIDTH}
+        height={HEIGHT}
+      />
+      <Composition
+        id="ThreeDays"
+        component={Dark}
+        durationInFrames={DARK_FRAMES}
         fps={FPS}
         width={WIDTH}
         height={HEIGHT}
