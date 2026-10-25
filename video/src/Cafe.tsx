@@ -638,6 +638,23 @@ const Cafe: React.FC<{ frame: number; dim?: boolean }> = ({ frame, dim }) => (
     <Bg a={dim ? "#3a2a2a" : "#7a5a48"} b={dim ? "#4a3430" : "#a07858"} id="cf" />
     <rect x="80" y="260" width="320" height="400" fill="#9fd8ff" stroke="#e8d7b8" strokeWidth="16" />
     <line x1="240" y1="260" x2="240" y2="660" stroke="#e8d7b8" strokeWidth="10" />
+    <clipPath id="wclip">
+      <rect x="88" y="268" width="304" height="384" />
+    </clipPath>
+    <g clipPath="url(#wclip)">
+      <rect x="88" y="560" width="304" height="92" fill="#4a5a70" />
+      {[0, 1, 2].map((i) => {
+        const x = ((frame * (1.6 + i * 0.7) + i * 160) % 460) - 80;
+        return (
+          <g key={i} transform={`translate(${i % 2 ? 480 - x : x} ${600 + Math.sin(frame * 0.3 + i) * 3})`}>
+            <rect x="-14" y="-90" width="28" height="64" rx="8" fill={["#2a3a5a", "#7a2a4a", "#2a5a3a"][i]} />
+            <circle cx="0" cy="-106" r="16" fill="#e3b79a" />
+            <rect x="-12" y="-28" width="9" height="28" fill="#222" transform={`rotate(${Math.sin(frame * 0.4 + i) * 20})`} />
+            <rect x="3" y="-28" width="9" height="28" fill="#222" transform={`rotate(${-Math.sin(frame * 0.4 + i) * 20})`} />
+          </g>
+        );
+      })}
+    </g>
     <circle cx="840" cy="300" r="46" fill="#ffe08a" opacity={0.6 + 0.2 * Math.sin(frame * 0.1)} />
     <rect x="440" y="360" width="420" height="260" fill="#3a2a22" stroke="#e8d7b8" strokeWidth="10" />
     <text x="650" y="520" textAnchor="middle" fill="#ffd34a" fontFamily="'Comic Sans MS','DejaVu Sans',cursive" fontSize="64" fontWeight="900">
@@ -797,14 +814,14 @@ const Ep5: React.FC<SP> = ({ frame, t }) => {
           Высылаем 2 мешка в подарок!
         </text>
         {[0, 1].map((i) => (
-          <g key={i} transform={`translate(${1500 - ease((k - 0.8 - i * 0.4) / 0.9) * 800 + i * 120} ${1760 - i * 20})`}>
+          <g key={i} transform={`translate(${1500 - ease((k - 0.8 - i * 0.4) / 0.9) * 800 + i * 120} ${1380 - i * 20})`}>
             <path d="M -90 0 Q -110 -160 -40 -190 L 40 -190 Q 110 -160 90 0 Z" fill="#c89a60" />
             <text y="-70" textAnchor="middle" fill="#3a2a18" fontFamily={FONT} fontSize="40" fontWeight="900">
               ЗЕРНО
             </text>
           </g>
         ))}
-        {k > 1.8 && <Pop x={540} y={1450} text="+2 МЕШКА!" t={t} t0={p1 + 1.8} size={100} color="#7dffb0" />}
+        {k > 1.8 && <Pop x={540} y={1280} text="+2 МЕШКА!" t={t} t0={p1 + 1.8} size={100} color="#7dffb0" />}
         <g opacity="0">{typed}</g>
       </g>
     );
@@ -829,7 +846,7 @@ const Ep5: React.FC<SP> = ({ frame, t }) => {
         <circle r="110" fill="none" stroke="#ffd34a" strokeWidth="16" />
         <line x1="78" y1="78" x2="180" y2="180" stroke="#ffd34a" strokeWidth="22" strokeLinecap="round" />
       </g>
-      <Bust x={220} y={1500} s={1.5} who="stepa" frame={frame} look={1} talking />
+      <Bust x={220} y={1400} s={1.2} who="stepa" frame={frame} look={1} talking />
     </g>
   );
 };
@@ -907,7 +924,7 @@ const Ep6: React.FC<SP> = ({ frame, t }) => {
               </text>
             </g>
           ))}
-          <g transform={`translate(860 1500)`}>
+          <g transform={`translate(860 1380)`}>
             <rect x="-200" y="-260" width="400" height="360" fill="#7a2a2a" />
             <rect x="-170" y="-230" width="340" height="190" fill="#1a1e2c" />
             <Bust x={0} y={-60} s={0.9} who="gena" frame={frame} look={-1} scared />
@@ -1088,7 +1105,7 @@ const Ep8: React.FC<SP> = ({ frame, t }) => {
           ))}
         </g>
         {[0, 1, 2].map((i) => (
-          <Bust key={i} x={150 + i * 390} y={1580} s={0.7} who={i === 1 ? "granny" : "kid"} frame={frame} look={0} />
+          <Bust key={i} x={150 + i * 390} y={1420} s={0.7} who={i === 1 ? "granny" : "kid"} frame={frame} look={0} />
         ))}
       </g>
     );
@@ -1130,7 +1147,7 @@ const Ep8: React.FC<SP> = ({ frame, t }) => {
           <Machine x={0} y={120} s={2.2} frame={frame} mode="new" />
         </g>
       )}
-      <Bust x={220} y={1640} s={0.9} who="stepa" frame={frame} look={1} talking={k14 < 3.6} />
+      <Bust x={220} y={1400} s={0.9} who="stepa" frame={frame} look={1} talking={k14 < 3.6} />
       {done && <Pop x={540} y={380} text="КУПЛЕНА!" t={t} t0={s14 + 4.9} size={130} color="#7dffb0" />}
     </g>
   );
@@ -1171,7 +1188,7 @@ const Ep9: React.FC<SP> = ({ frame, t }) => {
             </text>
           ))}
         </g>
-        <RobotBot x={900} y={1500} s={0.8} frame={frame} talking />
+        <RobotBot x={900} y={1330} s={0.7} frame={frame} talking />
       </g>
     );
   }
@@ -1336,7 +1353,7 @@ const Ep10: React.FC<SP> = ({ frame, t }) => {
               </text>
             ))}
           </g>
-          <g transform={`translate(840 1500)`}>
+          <g transform={`translate(860 1400)`}>
             <Bust x={0} y={0} s={1.0} who="granny" frame={frame} look={0} />
             <Cup x={110} y={170} s={1.0} steam frame={frame} />
           </g>
@@ -1345,6 +1362,94 @@ const Ep10: React.FC<SP> = ({ frame, t }) => {
     </g>
   );
 };
+
+/* ---------- заполнение пустых зон ---------- */
+const Ledger: React.FC<{ t: number }> = ({ t }) => {
+  if (t >= startOf("n11") - 0.1) return null;
+  const past = BALANCE_EVENTS.filter((e) => e.at <= t);
+  const rows = past.slice(-4).reverse();
+  let acc = 0;
+  const pts: [number, number][] = [[0, 0]];
+  for (const e of BALANCE_EVENTS) {
+    if (e.at > t) break;
+    pts.push([e.at, acc]);
+    acc += e.delta;
+    pts.push([e.at + 0.9, acc]);
+  }
+  pts.push([t, acc]);
+  const maxV = 420000;
+  const cw = 330;
+  const ch = 150;
+  const path = pts.map(([x, y], i) => `${i ? "L" : "M"} ${(x / DURATION_SEC) * cw} ${ch - (Math.max(0, y) / maxV) * ch}`).join(" ");
+  return (
+    <div style={{ position: "absolute", left: 36, right: 36, bottom: 86, height: 330, display: "flex", gap: 20, fontFamily: FONT, color: "#fff", background: "rgba(8,10,24,.74)", border: "2px solid #ffffff22", borderRadius: 26, padding: "16px 22px" }}>
+      <div style={{ flex: 1, minWidth: 0 }}>
+        <div style={{ fontSize: 22, fontWeight: 900, letterSpacing: 5, opacity: 0.7, marginBottom: 8 }}>ЖУРНАЛ</div>
+        {rows.length === 0 && <div style={{ fontSize: 30, fontWeight: 800, opacity: 0.5, marginTop: 40 }}>операций пока нет…</div>}
+        {rows.map((e, i) => {
+          const k = Math.min(1, (t - e.at) / 0.3);
+          const up = e.delta >= 0;
+          return (
+            <div key={e.at + e.label} style={{ display: "flex", alignItems: "center", gap: 14, height: 62, transform: i === 0 ? `translateX(${(1 - k) * 80}px)` : "none", opacity: i === 0 ? k : 1 - i * 0.2 }}>
+              <div style={{ width: 38, height: 38, borderRadius: 19, background: up ? "#2ac27a" : "#ff5a4a", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 26, fontWeight: 900 }}>{up ? "↑" : "↓"}</div>
+              <div style={{ flex: 1, fontSize: 25, fontWeight: 800, letterSpacing: 1, whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>{e.label}</div>
+              <div style={{ fontSize: 34, fontWeight: 900, color: up ? "#7dffb0" : "#ff8a7e", fontVariantNumeric: "tabular-nums" }}>
+                {up ? "+" : "−"}{fmt(Math.abs(e.delta))} ₽
+              </div>
+            </div>
+          );
+        })}
+      </div>
+      <div style={{ width: cw + 10 }}>
+        <div style={{ fontSize: 22, fontWeight: 900, letterSpacing: 5, opacity: 0.7, marginBottom: 8 }}>ДВИЖЕНИЕ ДЕНЕГ</div>
+        <svg width={cw + 10} height={ch + 40}>
+          <line x1="0" y1={ch} x2={cw} y2={ch} stroke="#ffffff33" strokeWidth="2" />
+          <path d={path} fill="none" stroke="#7dffb0" strokeWidth="5" strokeLinejoin="round" strokeLinecap="round" />
+          <circle cx={(t / DURATION_SEC) * cw} cy={ch - (Math.max(0, acc) / maxV) * ch} r="9" fill="#fff" />
+        </svg>
+      </div>
+    </div>
+  );
+};
+
+const Ticker: React.FC<{ t: number }> = ({ t }) => {
+  const ep = episodeAt(t);
+  const msg = `★ СТЕПА И ЗЕРНО ★ СЕРИЯ ${ep.n}: ${ep.title.toUpperCase()} ★ КАССА ДОЛЖНА ИГРАТЬ ★ `;
+  return (
+    <div style={{ position: "absolute", top: 250, left: 0, right: 0, height: 50, overflow: "hidden", background: "rgba(0,0,0,.45)", fontFamily: FONT }}>
+      <div style={{ whiteSpace: "nowrap", fontSize: 28, fontWeight: 900, letterSpacing: 4, color: "#ffd34a", lineHeight: "50px", transform: `translateX(${-((t * 170) % 1500)}px)` }}>
+        {msg.repeat(6)}
+      </div>
+      <div style={{ position: "absolute", left: 0, bottom: 0, height: 5, width: `${((ep.n - 1 + (t - ep.start) / (ep.end - ep.start)) / 10) * 100}%`, background: "#ff6b9d" }} />
+    </div>
+  );
+};
+
+const Beans: React.FC<{ t: number }> = ({ t }) => (
+  <g opacity="0.35">
+    {Array.from({ length: 16 }).map((_, i) => {
+      const x = (rand(i + 1) * W + t * (30 + rand(i) * 50)) % (W + 100) - 50;
+      const y = (rand(i + 40) * H - t * (20 + rand(i + 9) * 40) + H * 3) % H;
+      return (
+        <g key={i} transform={`translate(${x} ${y}) rotate(${t * 40 + i * 30})`}>
+          <ellipse rx="14" ry="9" fill="#5a3a22" />
+          <path d="M -12 0 Q 0 -6 12 0" stroke="#2a1a10" strokeWidth="2" fill="none" />
+        </g>
+      );
+    })}
+  </g>
+);
+
+const SpeedLines: React.FC<{ k: number }> = ({ k }) =>
+  k < 0.15 ? null : (
+    <g opacity={Math.min(0.5, k * 0.5)}>
+      {Array.from({ length: 28 }).map((_, i) => {
+        const a = (i / 28) * Math.PI * 2;
+        return <line key={i} x1={W / 2 + Math.cos(a) * 520} y1={H * 0.42 + Math.sin(a) * 620} x2={W / 2 + Math.cos(a) * 1300} y2={H * 0.42 + Math.sin(a) * 1500} stroke="#fff" strokeWidth={4 + (i % 3) * 3} />;
+      })}
+    </g>
+  );
+
 
 /* ---------- интерфейс ---------- */
 const Balance: React.FC<{ t: number; frame: number }> = ({ t, frame }) => {
@@ -1477,7 +1582,7 @@ export const Cafe2: React.FC = () => {
   const amp = 1.5 + kick * 24;
   const dx = Math.sin(frame * 1.7) * amp * 0.7;
   const dy = Math.cos(frame * 1.3) * amp * 0.7;
-  const zoom = 1 + kick * 0.04;
+  const zoom = 1.02 + kick * 0.05 + 0.012 * Math.sin(t * 1.3);
 
   const body = (() => {
     if (narrNow) {
@@ -1517,6 +1622,8 @@ export const Cafe2: React.FC = () => {
         <div style={{ transform: `translate(${dx}px, ${dy}px) scale(${zoom})`, transformOrigin: "50% 45%" }}>
           <svg viewBox={`0 0 ${W} ${H}`} width={W} height={H}>
             {body}
+            <Beans t={t} />
+            <SpeedLines k={kick} />
             <defs>
               <radialGradient id="vigc">
                 <stop offset="0.55" stopColor="#000" stopOpacity="0" />
@@ -1527,8 +1634,10 @@ export const Cafe2: React.FC = () => {
           </svg>
         </div>
       </div>
+      <Ticker t={t} />
       <Header t={t} />
       <Balance t={t} frame={frame} />
+      <Ledger t={t} />
       <Subtitle t={t} />
       <Audios />
     </AbsoluteFill>
