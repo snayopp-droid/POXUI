@@ -25,7 +25,17 @@ const BLUE = "#5ec8ff";
 const clamp = { extrapolateLeft: "clamp", extrapolateRight: "clamp" } as const;
 
 /* ---------- Персонажи (поясной портрет) ---------- */
-export type BustWho = Exclude<Who, "lira"> | "elder";
+export type BustWho = Exclude<Who, "lira"> | "elder" | "stepa" | "dima" | "luda" | "granny" | "realtor" | "kid" | "gena";
+
+const BASE: Record<string, string> = {
+  stepa: "mikhail",
+  dima: "mikhail",
+  realtor: "mikhail",
+  gena: "mikhail",
+  luda: "anna",
+  granny: "elder",
+  kid: "sonya",
+};
 
 type BustProps = {
   x: number;
@@ -45,10 +55,18 @@ const SHIRT: Record<string, [string, string]> = {
   mikhail: ["#4a5568", "#38414f"],
   anna: ["#b24a63", "#8d3a4f"],
   elder: ["#6b5b4a", "#54463a"],
+  stepa: ["#e8863a", "#c96a22"],
+  dima: ["#3a7a5a", "#2a5a42"],
+  realtor: ["#2a3a5c", "#1e2a44"],
+  luda: ["#7a4a9a", "#5e3a78"],
+  granny: ["#8a6a8a", "#6e526e"],
+  kid: ["#4a8ae8", "#3a6ab8"],
+  gena: ["#8a2a2a", "#6e2020"],
 };
 
 export const Bust: React.FC<BustProps> = ({ x, y, s = 1, who, frame, look = 0, scared, closed, talking, tint }) => {
   const [c1, c2] = SHIRT[who];
+  const base = BASE[who] ?? who;
   const bob = talking ? Math.sin(frame * 0.9) * 3 : Math.sin(frame * 0.07) * 2;
   return (
     <g transform={`translate(${x} ${y + bob}) scale(${s})`}>
@@ -56,35 +74,35 @@ export const Bust: React.FC<BustProps> = ({ x, y, s = 1, who, frame, look = 0, s
       <polygon points="0,30 40,30 100,60 120,160 0,160" fill={c2} />
       <polygon points="-18,24 18,24 12,60 -12,60" fill="#c99a7e" />
       <g transform="translate(0 -40)">
-        {who === "sonya" && (
+        {base === "sonya" && (
           <>
             <polygon points="-70,-30 -74,70 -52,60 -58,-20" fill="#3b2418" />
             <polygon points="70,-30 74,70 52,60 58,-20" fill="#2e1c12" />
           </>
         )}
         <Face look={look} frame={frame} scared={scared} closed={closed} />
-        {who === "sonya" && (
+        {base === "sonya" && (
           <>
             <polygon points="-68,-24 -50,-72 0,-88 50,-72 68,-24 0,-48" fill="#4a2e1f" />
             <polygon points="0,-88 50,-72 68,-24 0,-48" fill="#3b2418" />
             <polygon points="64,-60 108,-40 96,-8 70,-30" fill="#3b2418" />
           </>
         )}
-        {who === "elder" && (
+        {base === "elder" && (
           <>
             <polygon points="-64,-26 -46,-66 0,-76 46,-66 64,-26 0,-40" fill="#9a9aa2" />
             <polygon points="0,-76 46,-66 64,-26 0,-40" fill="#7d7d86" />
             <polygon points="-40,40 40,40 30,70 -30,70" fill="#d8d8dc" opacity="0.8" />
           </>
         )}
-        {who === "mikhail" && (
+        {base === "mikhail" && (
           <>
             <polygon points="-64,-26 -46,-70 0,-82 46,-70 64,-26 0,-44" fill="#2a2420" />
             <polygon points="0,-82 46,-70 64,-26 0,-44" fill="#1c1815" />
             <polygon points="-40,40 40,40 30,66 -30,66" fill="#4b4540" opacity="0.7" />
           </>
         )}
-        {who === "anna" && (
+        {base === "anna" && (
           <>
             <polygon points="-66,-24 -48,-72 0,-86 48,-72 66,-24 0,-46" fill="#7a4a2a" />
             <polygon points="0,-86 48,-72 66,-24 0,-46" fill="#5e3820" />
@@ -93,6 +111,22 @@ export const Bust: React.FC<BustProps> = ({ x, y, s = 1, who, frame, look = 0, s
             <polygon points="66,-24 72,40 54,30 58,-18" fill="#4e2e1a" />
           </>
         )}
+        {who === "stepa" && (
+          <>
+            <polygon points="-68,-26 -52,-82 0,-98 52,-82 68,-26 0,-48" fill="#1f6f7a" />
+            <polygon points="0,-98 52,-82 68,-26 0,-48" fill="#165560" />
+            <rect x="-70" y="-34" width="140" height="18" rx="6" fill="#134550" />
+          </>
+        )}
+        {who === "granny" && (
+          <>
+            <circle cx="-26" cy="-6" r="22" fill="none" stroke="#333" strokeWidth="4" />
+            <circle cx="26" cy="-6" r="22" fill="none" stroke="#333" strokeWidth="4" />
+            <line x1="-4" y1="-6" x2="4" y2="-6" stroke="#333" strokeWidth="4" />
+            <circle cx="0" cy="-92" r="24" fill="#9a9aa2" />
+          </>
+        )}
+        {who === "dima" && <polygon points="-70,-20 70,-20 66,-2 -66,-2" fill="#2a2a2a" opacity="0.001" />}
       </g>
       {tint && <rect x="-130" y="-140" width="260" height="310" fill={tint} opacity="0.12" />}
     </g>
