@@ -7,6 +7,8 @@ import { Cell } from "./Cell";
 import { Cafe2 } from "./Cafe";
 import { Zombie_ } from "./Zombie";
 import { Korni } from "./Korni";
+import { Forest5 } from "./Forest5";
+import { Plague } from "./Plague";
 import { Pixi3DDemo, PIXI3D_FRAMES } from "./Pixi3DDemo";
 import { DURATION_FRAMES, FPS, HEIGHT, WIDTH } from "./timeline";
 import { DURATION_FRAMES as ACTION_FRAMES } from "./timeline2";
@@ -16,6 +18,8 @@ import { DURATION_FRAMES as CELL_FRAMES } from "./timeline5";
 import { DURATION_FRAMES as CAFE_FRAMES } from "./timeline6";
 import { DURATION_FRAMES as ZOMBIE_FRAMES } from "./timeline8";
 import { DURATION_FRAMES as KORNI_FRAMES } from "./timeline9";
+import { DURATION_FRAMES as FOREST5_FRAMES } from "./timeline10";
+import { DURATION_FRAMES as PLAGUE_FRAMES } from "./timeline11";
 
 export const RemotionRoot: React.FC = () => {
   return (
@@ -80,6 +84,22 @@ export const RemotionRoot: React.FC = () => {
         id="Korni"
         component={Korni}
         durationInFrames={KORNI_FRAMES}
+        fps={FPS}
+        width={WIDTH}
+        height={HEIGHT}
+      />
+      <Composition
+        id="Forest5"
+        component={Forest5}
+        durationInFrames={FOREST5_FRAMES}
+        fps={FPS}
+        width={WIDTH}
+        height={HEIGHT}
+      />
+      <Composition
+        id="PlagueMoscow"
+        component={Plague}
+        durationInFrames={PLAGUE_FRAMES}
         fps={FPS}
         width={WIDTH}
         height={HEIGHT}
