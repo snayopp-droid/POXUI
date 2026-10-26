@@ -9,6 +9,7 @@ import { Zombie_ } from "./Zombie";
 import { Korni } from "./Korni";
 import { Forest5 } from "./Forest5";
 import { Plague } from "./Plague";
+import { Metro } from "./Metro";
 import { Pixi3DDemo, PIXI3D_FRAMES } from "./Pixi3DDemo";
 import { DURATION_FRAMES, FPS, HEIGHT, WIDTH } from "./timeline";
 import { DURATION_FRAMES as ACTION_FRAMES } from "./timeline2";
@@ -20,6 +21,7 @@ import { DURATION_FRAMES as ZOMBIE_FRAMES } from "./timeline8";
 import { DURATION_FRAMES as KORNI_FRAMES } from "./timeline9";
 import { DURATION_FRAMES as FOREST5_FRAMES } from "./timeline10";
 import { DURATION_FRAMES as PLAGUE_FRAMES } from "./timeline11";
+import { DURATION_FRAMES as METRO_FRAMES } from "./timeline12";
 
 export const RemotionRoot: React.FC = () => {
   return (
@@ -100,6 +102,14 @@ export const RemotionRoot: React.FC = () => {
         id="PlagueMoscow"
         component={Plague}
         durationInFrames={PLAGUE_FRAMES}
+        fps={FPS}
+        width={WIDTH}
+        height={HEIGHT}
+      />
+      <Composition
+        id="MetroPlague"
+        component={Metro}
+        durationInFrames={METRO_FRAMES}
         fps={FPS}
         width={WIDTH}
         height={HEIGHT}
