@@ -7,6 +7,7 @@ import { Cell } from "./Cell";
 import { Cafe2 } from "./Cafe";
 import { Zombie_ } from "./Zombie";
 import { Korni } from "./Korni";
+import { Pixi3DDemo, PIXI3D_FRAMES } from "./Pixi3DDemo";
 import { DURATION_FRAMES, FPS, HEIGHT, WIDTH } from "./timeline";
 import { DURATION_FRAMES as ACTION_FRAMES } from "./timeline2";
 import { DURATION_FRAMES as HOME_FRAMES } from "./timeline3";
@@ -79,6 +80,14 @@ export const RemotionRoot: React.FC = () => {
         id="Korni"
         component={Korni}
         durationInFrames={KORNI_FRAMES}
+        fps={FPS}
+        width={WIDTH}
+        height={HEIGHT}
+      />
+      <Composition
+        id="Pixi3D"
+        component={Pixi3DDemo}
+        durationInFrames={PIXI3D_FRAMES}
         fps={FPS}
         width={WIDTH}
         height={HEIGHT}
