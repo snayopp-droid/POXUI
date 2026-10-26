@@ -10,6 +10,7 @@ import { Korni } from "./Korni";
 import { Forest5 } from "./Forest5";
 import { Plague } from "./Plague";
 import { Metro } from "./Metro";
+import { Fura } from "./Fura";
 import { Pixi3DDemo, PIXI3D_FRAMES } from "./Pixi3DDemo";
 import { DURATION_FRAMES, FPS, HEIGHT, WIDTH } from "./timeline";
 import { DURATION_FRAMES as ACTION_FRAMES } from "./timeline2";
@@ -22,6 +23,7 @@ import { DURATION_FRAMES as KORNI_FRAMES } from "./timeline9";
 import { DURATION_FRAMES as FOREST5_FRAMES } from "./timeline10";
 import { DURATION_FRAMES as PLAGUE_FRAMES } from "./timeline11";
 import { DURATION_FRAMES as METRO_FRAMES } from "./timeline12";
+import { DURATION_FRAMES as FURA_FRAMES } from "./timelineF";
 
 export const RemotionRoot: React.FC = () => {
   return (
@@ -113,6 +115,14 @@ export const RemotionRoot: React.FC = () => {
         fps={FPS}
         width={WIDTH}
         height={HEIGHT}
+      />
+      <Composition
+        id="FuraEp1"
+        component={Fura}
+        durationInFrames={FURA_FRAMES}
+        fps={FPS}
+        width={1920}
+        height={1080}
       />
       <Composition
         id="Pixi3D"
