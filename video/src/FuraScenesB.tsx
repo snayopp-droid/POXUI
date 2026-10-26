@@ -9,9 +9,9 @@ import type { SP } from "./FuraScenesA";
 /* ------------------------------------------------------------------ */
 /* Одежда героев                                                        */
 /* ------------------------------------------------------------------ */
-export const NURLAN = { shirt: "#22406a", look: "suit" as const, tie: "#d9b13a", pants: "#1c2a44", hair: "short" as const, hairCol: "#16130f", bigHands: true };
+export const NURLAN = { shirt: "#3566b8", look: "suit" as const, tie: "#d9b13a", pants: "#1c2a44", hair: "short" as const, hairCol: "#16130f", bigHands: true };
 export const AIGUL = { shirt: "#d9708f", look: "dress" as const, pants: "skirt", hair: "long" as const, hairCol: "#17120f" };
-export const MARAT = { shirt: "#17171d", look: "suit" as const, tie: "#8e1b1b", pants: "#17171d", hair: "slick" as const, hairCol: "#0f0f12", stubble: true, ring: true, chain: true };
+export const MARAT = { shirt: "#17171d", look: "suit" as const, tie: "#8e1b1b", pants: "#17171d", hair: "slick" as const, hairCol: "#0f0f12", stubble: true, ring: true, chain: true, shades: true, skin: "#ecd6b4" };
 
 const phoneBubbleHand = <g transform="translate(8,-18) rotate(14) scale(1.25)"><PhoneProp glow={false} /></g>;
 
@@ -40,12 +40,12 @@ export const PavilionWorld: React.FC<PavP> = ({ t, cx = 960, cy = 540, z = 1, sh
         <clipPath id="p-win"><rect x={1130} y={170} width={600} height={470} /></clipPath>
         <clipPath id="p-door"><rect x={1770} y={230} width={160} height={650} /></clipPath>
       </defs>
-      <rect x={-300} y={-200} width={W + 600} height={1500} fill={wall} />
-      <rect x={-300} y={600} width={W + 600} height={290} fill={day ? "#86b26e" : "#7a8a80"} />
-      <rect x={-300} y={600} width={W + 600} height={12} fill="#fff" opacity={0.3} />
-      <rect x={-300} y={880} width={W + 600} height={500} fill={day ? "#c79a66" : "#8c7a68"} />
+      <rect x={-900} y={-300} width={W + 1800} height={1700} fill={wall} />
+      <rect x={-900} y={600} width={W + 1800} height={290} fill={day ? "#86b26e" : "#7a8a80"} />
+      <rect x={-900} y={600} width={W + 1800} height={12} fill="#fff" opacity={0.3} />
+      <rect x={-900} y={880} width={W + 1800} height={600} fill={day ? "#c79a66" : "#8c7a68"} />
       {Array.from({ length: 12 }).map((_, i) => <path key={i} d={`M${-300 + i * 220},880 L${-380 + i * 260},1300`} stroke="#000" strokeOpacity={0.12} strokeWidth={3} />)}
-      <rect x={-300} y={876} width={W + 600} height={10} fill="#000" opacity={0.18} />
+      <rect x={-900} y={876} width={W + 1800} height={10} fill="#000" opacity={0.18} />
       {/* вывеска */}
       <g transform="translate(540 120)">
         <rect x={-330} y={-52} width={660} height={104} rx={14} fill="#2e7a46" stroke={INK} strokeWidth={4} />
@@ -470,7 +470,7 @@ export const SLower: React.FC<SP> = ({ t, lt }) => {
 /* ------------------------------------------------------------------ */
 /* Марат                                                                */
 /* ------------------------------------------------------------------ */
-const MaratP = (t: number, p: Partial<React.ComponentProps<typeof Person>> = {}) => <Person x={1450} y={960} t={t} {...MARAT} flip mood="smirk" {...p} />;
+const MaratP = (t: number, p: Partial<React.ComponentProps<typeof Person>> = {}) => <Person x={1450} y={960} s={1.08} t={t} {...MARAT} flip mood="smirk" {...p} />;
 
 export const SMaratEnters: React.FC<SP> = ({ t, lt }) => {
   const open = easeOut(ramp(lt, 0.1, 0.6));
@@ -480,9 +480,9 @@ export const SMaratEnters: React.FC<SP> = ({ t, lt }) => {
     <Svg>
       <PavilionWorld t={t} cx={1300} cy={600} z={1.15} mood="empty" shelves={0} doorOpen={open}>
         {NurlanP(t, { x: 820, mood: "worry", lookX: 1 })}
-        <Person x={x} y={960} t={t} {...MARAT} flip mood="smirk" walk={walking} />
+        <Person x={x} y={960} s={1.08} t={t} {...MARAT} flip mood="smirk" walk={walking} />
       </PavilionWorld>
-      <CharCard x={640} y={500} name="МАРАТ" sub="35 ЛЕТ · ВЛАДЕЛЕЦ СОСЕДНИХ ТОЧЕК" k={pop(lt, 1.3, 0.35)} accent="#8e1b1b">
+      <CharCard x={980} y={470} name="МАРАТ" sub="35 ЛЕТ · ВЛАДЕЛЕЦ СОСЕДНИХ ТОЧЕК" k={pop(lt, 1.3, 0.35)} accent="#8e1b1b">
         <Person x={0} y={150} t={t} {...MARAT} mood="smirk" />
       </CharCard>
       <Vignette o={0.8} />
@@ -539,7 +539,7 @@ export const SMaratOffer: React.FC<SP> = ({ t, lt }) => {
   const z = A("Слушай моё предложение") - 0.2;
   const p = cl(lt / (z - a));
   const rent = 120000 + Math.floor(lt * 4000);
-  const days = Math.max(0, 7 - Math.floor(ramp(lt, 0.8, 2.6) * 7));
+  const days = 7;
   return (
     <Svg>
       <PavilionWorld t={t} cx={1230} cy={640} z={1.35} mood="empty" shelves={0} doorOpen={1}>
@@ -593,14 +593,14 @@ export const SMaratWait: React.FC<SP> = ({ t, lt }) => {
   const a = A("Пока не продаёшь");
   const z = Z("будет уже другой");
   const p = cl((lt + A("Марат усмехается") - a) / (z - a));
-  const days = Math.max(0, 7 - Math.floor(ramp(lt, A("Неделю") - A("Марат усмехается"), A("Неделю") - A("Марат усмехается") + 1.2) * 7));
+  const days = Math.max(0, 7 - Math.floor(ramp(lt, A("Неделю", 1) - A("Марат усмехается"), A("Неделю", 1) - A("Марат усмехается") + 1.2) * 7));
   return (
     <Svg>
       <PavilionWorld t={t} cx={1300} cy={660} z={1.7} mood="empty" shelves={0} doorOpen={1}>
         {MaratP(t, { x: 1400, talk: talking("marat", t), mood: "smirk", tR: [90, -240] })}
       </PavilionWorld>
       <Bubble x={1060} y={250} text="Пока не продаёшь. Я подожду. Неделю. А потом ты сам приползёшь. Только цена будет уже другой" p={p} k={pop(lt, 0.15, 0.3)} tx={1340} ty={400} max={30} size={37} />
-      <g transform={`translate(440 560) scale(${pop(lt, A("Неделю") - A("Марат усмехается") - 0.2, 0.3)})`}>
+      <g transform={`translate(440 560) scale(${pop(lt, A("Неделю", 1) - A("Марат усмехается") - 0.2, 0.3)})`}>
         <rect x={-190} y={-170} width={380} height={340} rx={20} fill="#fbf8ef" stroke={INK} strokeWidth={4} />
         <rect x={-190} y={-170} width={380} height={64} rx={20} fill={RED} stroke={INK} strokeWidth={4} />
         <text x={0} y={-124} textAnchor="middle" fontFamily={FONT} fontWeight={800} fontSize={34} fill="#fff" letterSpacing={6}>СРОК</text>
@@ -621,7 +621,7 @@ export const SMaratLeaves: React.FC<SP> = ({ t, lt }) => {
       <PavilionWorld t={t} cx={1200} cy={640} z={1.2} mood="empty" shelves={0} doorOpen={1}>
         <Person x={760} y={960} t={t} {...AIGUL} mood="sad" tears={0.3 * hold} tR={[lerp(60, 70, hold), lerp(-170, -176, hold)]} />
         {NurlanP(t, { x: 920, mood: "sad", tL: [lerp(-60, -70, hold), lerp(-170, -176, hold)] })}
-        <Person x={x} y={960} t={t} {...MARAT} mood="smirk" walk={lt * 6} />
+        <Person x={x} y={960} s={1.08} t={t} {...MARAT} mood="smirk" walk={lt * 6} />
       </PavilionWorld>
       <Vignette o={0.8} />
     </Svg>

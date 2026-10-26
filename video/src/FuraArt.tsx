@@ -87,14 +87,14 @@ export type PersonP = {
   look?: "plaid" | "suit" | "dress" | "plain"; tie?: string; shoe?: string;
   mood?: Mood; talk?: number; lookX?: number; lookY?: number;
   armL?: number; armR?: number; tL?: [number, number]; tR?: [number, number]; handL?: React.ReactNode; handR?: React.ReactNode;
-  blood?: number; stubble?: boolean; glasses?: boolean; ring?: boolean; bigHands?: boolean; chain?: boolean;
+  blood?: number; stubble?: boolean; glasses?: boolean; shades?: boolean; ring?: boolean; bigHands?: boolean; chain?: boolean;
   walk?: number; breathe?: boolean; opacity?: number; tilt?: number; sit?: boolean; hide?: boolean; tears?: number;
 };
 
 export const Person: React.FC<PersonP> = ({
   x, y, s = 1, flip, t, shirt = "#e8b53a", pants = "#2d2f3b", skin = SKIN, hair = "short", hairCol = "#2a1d16", cap = "#2a3a5a",
   look = "plain", tie = "#c43a3a", shoe = "#1c1d24", mood = "neutral", talk = 0, lookX = 0, lookY = 0,
-  armL = 8, armR = 8, tL, tR, handL, handR, blood = 0, stubble = false, glasses = false, ring = false, bigHands = false, chain = false,
+  armL = 8, armR = 8, tL, tR, handL, handR, blood = 0, stubble = false, glasses = false, shades = false, ring = false, bigHands = false, chain = false,
   walk, breathe = true, opacity = 1, tilt = 0, sit = false, hide = false, tears = 0,
 }) => {
   if (hide) return null;
@@ -211,6 +211,14 @@ export const Person: React.FC<PersonP> = ({
         {glasses && (
           <g fill="none" stroke={INK} strokeWidth={3}>
             <circle cx={-eyeX} cy={eyeY} r={16} /><circle cx={eyeX} cy={eyeY} r={16} /><path d={`M${-eyeX + 16},${eyeY} h${eyeX * 2 - 32}`} />
+          </g>
+        )}
+        {shades && (
+          <g>
+            <rect x={-eyeX - 20} y={eyeY - 12} width={40} height={26} rx={8} fill="#101015" stroke={INK} strokeWidth={2.5} />
+            <rect x={eyeX - 20} y={eyeY - 12} width={40} height={26} rx={8} fill="#101015" stroke={INK} strokeWidth={2.5} />
+            <path d={`M${-eyeX + 20},${eyeY} h${eyeX * 2 - 40}`} stroke={INK} strokeWidth={3} />
+            <path d={`M${-eyeX - 12},${eyeY - 6} l12,-0 M${eyeX - 12},${eyeY - 6} l12,0`} stroke="#fff" strokeWidth={3} opacity={0.5} />
           </g>
         )}
         {/* брови */}

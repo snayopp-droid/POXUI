@@ -80,17 +80,17 @@ const TRUCK_Y = 908;
 
 type RoadP = {
   t: number; cx?: number; cy?: number; z?: number; shake?: number; rot?: number;
-  danila?: Partial<React.ComponentProps<typeof Person>> | null; partnerSleep?: boolean; lights?: boolean; rainO?: number; zzz?: boolean; cars?: boolean;
+  danila?: Partial<React.ComponentProps<typeof Person>> | null; cabWindow?: React.ReactNode; partnerSleep?: boolean; lights?: boolean; rainO?: number; zzz?: boolean; cars?: boolean;
   smoke?: boolean;
 };
 
-export const RoadWorld: React.FC<RoadP> = ({ t, cx = 960, cy = 540, z = 1, shake = 0, rot = 0, danila = {}, partnerSleep = true, lights = true, rainO = 0.45, cars = true, smoke = false }) => (
+export const RoadWorld: React.FC<RoadP> = ({ t, cx = 960, cy = 540, z = 1, shake = 0, rot = 0, danila = {}, cabWindow: cabOverride, partnerSleep = true, lights = true, rainO = 0.45, cars = true, smoke = false }) => (
   <g>
     <Cam cx={cx} cy={cy} z={z} shake={shake} rot={rot} t={t}>
       <NightBG t={t} showCars={cars} />
       <Truck
         x={TRUCK_X} y={TRUCK_Y} lights={lights} t={t}
-        cabWindow={partnerSleep ? (
+        cabWindow={cabOverride ?? (partnerSleep ? (
           <g>
             <rect x={-320} y={-290} width={220} height={100} fill="#233048" />
             <g transform="translate(-196,-236)">
@@ -100,7 +100,7 @@ export const RoadWorld: React.FC<RoadP> = ({ t, cx = 960, cy = 540, z = 1, shake
               <path d="M-8,22 h16" stroke={INK} strokeWidth={3} strokeLinecap="round" />
             </g>
           </g>
-        ) : undefined}
+        ) : undefined)}
       />
       {danila !== null && (
         <Person
@@ -117,18 +117,19 @@ export const RoadWorld: React.FC<RoadP> = ({ t, cx = 960, cy = 540, z = 1, shake
 /* ------------------------------------------------------------------ */
 /* Открывающий шок                                                      */
 /* ------------------------------------------------------------------ */
-const Splat: React.FC<{ k: number; t: number }> = ({ k, t }) => {
+const Splat: React.FC<{ k: number; t: number; clear?: number }> = ({ k, t, clear = 0 }) => {
   const R = 1250 * easeOut(k);
   const blobs = Array.from({ length: 22 }).map((_, i) => {
     const a = (i / 22) * TAU + rnd(i) * 0.4;
     const r = R * (0.55 + rnd(i + 5) * 0.55);
     return { x: W / 2 + Math.cos(a) * r * 0.9, y: H / 2 + Math.sin(a) * r * 0.55, r: 90 + rnd(i + 9) * 150 };
   });
+  const dist = (b: { x: number; y: number }) => Math.hypot((b.x - W / 2) / 1.7, b.y - H / 2);
   return (
     <g opacity={cl(k * 6)}>
-      <circle cx={W / 2} cy={H / 2} r={R * 0.62} fill="#c4281c" />
-      {blobs.map((b, i) => <circle key={i} cx={b.x} cy={b.y} r={b.r * easeOut(k)} fill={i % 3 ? "#c4281c" : "#a81e16"} />)}
-      <circle cx={W / 2 - 120} cy={H / 2 - 100} r={R * 0.3} fill="#e0463a" opacity={0.55} />
+      <circle cx={W / 2} cy={H / 2} r={R * 0.62} fill="#c4281c" opacity={1 - clear * 0.97} />
+      {blobs.map((b, i) => <circle key={i} cx={b.x} cy={b.y} r={b.r * easeOut(k)} fill={i % 3 ? "#c4281c" : "#a81e16"} opacity={dist(b) < 330 ? 1 - clear * 0.97 : 0.92} />)}
+      <circle cx={W / 2 - 120} cy={H / 2 - 100} r={R * 0.3} fill="#e0463a" opacity={0.55 * (1 - clear)} />
       {/* потёки */}
       {Array.from({ length: 16 }).map((_, i) => {
         const x = 120 + i * 112 + rnd(i) * 40;
@@ -167,12 +168,12 @@ export const SHookSplat: React.FC<SP> = ({ t, lt }) => {
           <Tomato x={0} y={0} r={120} rot={lt * 500} />
         </g>
       )}
-      {hit && <Splat k={k} t={lt - 0.56} />}
+      {hit && <Splat k={k} t={lt - 0.56} clear={ramp(lt, 0.8, 1.15)} />}
       {hit && <g opacity={0.9}><rect width={W} height={H} fill="#7a120c" opacity={0.18} /></g>}
       <Flash o={lt > 0.56 ? Math.max(0, 0.9 - (lt - 0.56) * 9) : 0} />
       {lt > OFF + 0.05 && (
         <g transform="translate(960 168)">
-          <Bubble x={0} y={0} text="Нурлан... Я всё сломал..." p={whisper > 0 ? Math.min(1, (lt - OFF) / 2.2) : 0} k={pop(lt, OFF + 0.05, 0.25)} tx={960 - 960} ty={200} max={30} size={44} dark />
+          <Bubble x={0} y={0} text="Нурлан... Я всё сломал..." p={whisper > 0 ? Math.min(1, (lt - OFF) / 2.0) : 0} k={pop(lt, OFF + 0.05, 0.25)} tx={0} ty={230} max={30} size={54} dark />
         </g>
       )}
       <Vignette o={0.9} />
@@ -444,15 +445,20 @@ const dur = (lt: number) => Math.max(lt, 1.6);
 
 export const SWhisperGo: React.FC<SP> = ({ t, lt }) => {
   const a = A("Сейчас сейчас");
-  const z = A("Главное доехать");
+  const z = Z("Главное доехать");
   const p = cl((lt + A("Шепчет себе под нос") - a) / (z - a));
   return (
     <Svg>
-      <RoadWorld t={t} cx={1150} cy={650} z={2.0} danila={null} partnerSleep={false} lights />
-      <g transform="translate(1048 630)">
-        <Person x={0} y={0} t={t} {...dClothes} s={0.5} mood="worry" talk={talking("danila", t) * 0.5} lookX={-1} />
-      </g>
-      <Bubble x={900} y={290} text="Сейчас, сейчас... Главное — доехать" p={p} k={pop(lt, 0.8, 0.3)} tx={1030} ty={400} max={26} size={40} />
+      <RoadWorld
+        t={t} cx={1100} cy={640} z={2.2} danila={null} lights
+        cabWindow={
+          <g>
+            <rect x={-320} y={-290} width={220} height={100} fill="#233048" />
+            <Person x={-205} y={-52} s={0.5} t={t} {...dClothes} mood="worry" talk={talking("danila", t) * 0.5} lookX={-1} />
+          </g>
+        }
+      />
+      <Bubble x={820} y={290} text="Сейчас, сейчас... Главное — доехать" p={p} k={pop(lt, 0.8, 0.3)} tx={1060} ty={470} max={26} size={42} />
       <Vignette />
     </Svg>
   );
@@ -553,8 +559,8 @@ export const SScreech: React.FC<SP> = ({ t, lt }) => {
 export const SSkid: React.FC<SP> = ({ t, lt, dur }) => {
   const p = cl(lt / Math.max(0.4, dur));
   const ang = lerp(0, 118, easeInOut(ramp(p, 0.1, 0.9))) * -1;
-  const tx = lerp(360, 1150, easeOut(p));
-  const ty = lerp(430, 640, easeIn(p));
+  const tx = lerp(420, 1250, easeOut(p));
+  const ty = lerp(430, 600, easeIn(p));
   const spin = ang;
   return (
     <Svg>
@@ -563,7 +569,7 @@ export const SSkid: React.FC<SP> = ({ t, lt, dur }) => {
       <rect x={0} y={700} width={W} height={380} fill="#171a24" />
       <rect x={0} y={690} width={W} height={10} fill="#d6d9e4" opacity={0.8} />
       {Array.from({ length: 12 }).map((_, i) => <rect key={i} x={((i * 220 - lt * 600) % 2640 + 2640) % 2640 - 300} y={452} width={120} height={10} fill="#d6d9e4" opacity={0.7} />)}
-      <g transform={`translate(${tx} ${ty}) rotate(${spin})`}>
+      <g transform={`translate(${tx} ${ty}) rotate(${spin}) scale(1.7)`}>
         <path d="M-60,-30 L-880,-150 L-880,150 L-60,30Z" fill="url(#f-sunray)" opacity={0.8} />
         <rect x={-60} y={-70} width={420} height={140} rx={8} fill="#f1f3f6" stroke={INK} strokeWidth={4} />
         <rect x={-190} y={-62} width={130} height={124} rx={14} fill="#2c64b0" stroke={INK} strokeWidth={4} />
@@ -572,7 +578,7 @@ export const SSkid: React.FC<SP> = ({ t, lt, dur }) => {
         <circle cx={-190} cy={-40} r={10} fill="#fff6c8" /><circle cx={-190} cy={40} r={10} fill="#fff6c8" />
         <circle cx={-190} cy={0} r={160} fill="url(#f-white)" opacity={0.5} />
       </g>
-      {Array.from({ length: 16 }).map((_, i) => <ellipse key={i} cx={lerp(360, tx, i / 16)} cy={lerp(430, ty, (i / 16) * 0.9)} rx={90} ry={10} fill="#8fb4ff" opacity={0.12 * (i / 16)} />)}
+      {Array.from({ length: 16 }).map((_, i) => <ellipse key={i} cx={lerp(420, tx, i / 16)} cy={lerp(430, ty, (i / 16) * 0.9)} rx={90} ry={10} fill="#8fb4ff" opacity={0.12 * (i / 16)} />)}
       <Rain t={t} o={0.35} />
       <Comic x={1360} y={300} text="ЗАНОС!" k={pop(lt, 0.3, 0.3)} rot={7} size={150} col="#fff" />
       <rect width={W} height={H} fill="#fff" opacity={Math.sin(t * 24) > 0.6 ? 0.18 : 0} />
@@ -607,20 +613,19 @@ const Ditch: React.FC<{ t: number; boxes?: boolean }> = ({ t, boxes = false }) =
     <path d="M-600,780 Q500,860 1100,960 T2600,1000" fill="none" stroke="#2b3248" strokeWidth={8} />
     {Array.from({ length: 14 }).map((_, i) => <rect key={i} x={i * 160 - 100} y={654} width={90} height={9} fill="#d6d9e4" opacity={0.6} />)}
     <ellipse cx={1000} cy={1010} rx={650} ry={34} fill="#6aa0ff" opacity={0.12} />
-    {/* перевёрнутая фура на боку, колёсами к нам */}
-    <g transform="translate(1180 1000) rotate(-96)">
-      <Truck x={0} y={0} s={1.02} lights t={t} />
+    {/* фура перевёрнута колёсами вверх: кабина справа, задние двери слева */}
+    <g transform="translate(1180 690) rotate(184)">
+      <Truck x={0} y={0} s={1.0} lights t={t} wheelSpin={t * 0.7} />
     </g>
     {boxes && null}
-    <Glow x={640} y={730} r={160} />
+    
   </g>
 );
-const Glow: React.FC<{ x: number; y: number; r: number }> = ({ x, y, r }) => <circle cx={x} cy={y} r={r} fill="url(#f-white)" opacity={0.18 + 0.08 * Math.sin(Date.now() * 0)} />;
 
 export const SDitch: React.FC<SP> = ({ t, lt }) => {
   const steam = Array.from({ length: 8 }).map((_, i) => {
     const p = (t * 0.5 + i / 8) % 1;
-    return <circle key={i} cx={560 + Math.sin(t * 2 + i) * 30 + p * 40} cy={780 - p * 300} r={20 + p * 60} fill="#dfe6f2" opacity={0.28 * (1 - p)} />;
+    return <circle key={i} cx={1460 + Math.sin(t * 2 + i) * 30 + p * 40} cy={800 - p * 300} r={20 + p * 60} fill="#dfe6f2" opacity={0.28 * (1 - p)} />;
   });
   return (
     <Svg>
@@ -639,14 +644,14 @@ export const SSpill: React.FC<SP> = ({ t, lt }) => {
   const N = 26;
   return (
     <Svg>
-      <Cam cx={1100} cy={800} z={1.25} t={t} shake={0.8}>
+      <Cam cx={800} cy={780} z={1.35} t={t} shake={0.8}>
         <Ditch t={t} />
         {Array.from({ length: N }).map((_, i) => {
           const a = 0.1 + rnd(i) * 1.8;
           const q = ramp(lt, a, a + 0.9);
           if (q <= 0) return null;
-          const x0 = 1500 + rnd(i + 2) * 120;
-          const x = x0 - easeOut(q) * (300 + rnd(i + 4) * 680);
+          const x0 = 730 + rnd(i + 2) * 60;
+          const x = x0 - easeOut(q) * (120 + rnd(i + 4) * 560);
           const y = lerp(760, 960 + (i % 4) * 14, easeIn(Math.min(1, q * 1.6))) - Math.sin(Math.min(1, q * 1.2) * Math.PI) * 70;
           const squash = ramp(lt, a + 1.1 + rnd(i) * 0.5, a + 1.8);
           return squash > 0.5 ? (
@@ -655,9 +660,9 @@ export const SSpill: React.FC<SP> = ({ t, lt }) => {
         })}
         {[0, 1, 2].map((i) => {
           const q = ramp(lt, 0.2 + i * 0.5, 1.2 + i * 0.5);
-          return q > 0 ? <Crate key={i} x={1560 - easeOut(q) * (200 + i * 160)} y={lerp(760, 980, easeIn(q))} w={170} h={95} rot={q * (90 + i * 40) * (i % 2 ? -1 : 1)} /> : null;
+          return q > 0 ? <Crate key={i} x={740 - easeOut(q) * (160 + i * 170)} y={lerp(760, 980, easeIn(q))} w={170} h={95} rot={q * (90 + i * 40) * (i % 2 ? -1 : 1)} /> : null;
         })}
-        <ellipse cx={1000} cy={1010} rx={ramp(lt, 1.6, 3.2) * 480} ry={ramp(lt, 1.6, 3.2) * 26} fill="#8e1a12" opacity={0.85} />
+        <ellipse cx={460} cy={1010} rx={ramp(lt, 1.6, 3.2) * 480} ry={ramp(lt, 1.6, 3.2) * 26} fill="#8e1a12" opacity={0.85} />
       </Cam>
       <Rain t={t} o={0.55} />
       <Vignette />
@@ -669,14 +674,14 @@ export const SClimbOut: React.FC<SP> = ({ t, lt, dur }) => {
   const p = cl(lt / Math.max(1, dur));
   const rise = easeOut(ramp(p, 0, 0.45));
   const walkP = ramp(p, 0.5, 1);
-  const x = lerp(1180, 760, walkP);
+  const x = lerp(1380, 640, walkP);
   return (
     <Svg>
       <Cam cx={1000} cy={760} z={1.12} t={t}>
         <Ditch t={t} />
-        <ellipse cx={1000} cy={1010} rx={500} ry={30} fill="#8e1a12" opacity={0.85} />
-        {Array.from({ length: 10 }).map((_, i) => <Tomato key={i} x={420 + rnd(i) * 900} y={1000 + rnd(i + 3) * 30} r={14 + rnd(i) * 10} col="#a82018" />)}
-        <Person x={x} y={lerp(930 + 220, 960, rise)} t={t} {...dClothes} mood="scared" blood={0.8} walk={walkP > 0 ? (lt - dur * 0.5) * 4.2 : undefined} opacity={ramp(p, 0, 0.2)} tilt={walkP > 0 ? Math.sin((lt - dur * 0.5) * 4.2 * 2) * 3 - 4 : 0} />
+        <ellipse cx={520} cy={1010} rx={520} ry={30} fill="#8e1a12" opacity={0.85} />
+        {Array.from({ length: 10 }).map((_, i) => <Tomato key={i} x={160 + rnd(i) * 700} y={1000 + rnd(i + 3) * 30} r={14 + rnd(i) * 10} col="#a82018" />)}
+        <Person x={x} y={lerp(1180, 1000, rise)} t={t} {...dClothes} mood="scared" blood={0.8} walk={walkP > 0 ? (lt - dur * 0.5) * 4.2 : undefined} opacity={ramp(p, 0, 0.2)} tilt={walkP > 0 ? Math.sin((lt - dur * 0.5) * 4.2 * 2) * 3 - 4 : 0} />
       </Cam>
       <Rain t={t} o={0.55} />
       <Vignette />
@@ -702,9 +707,9 @@ export const SRealize: React.FC<SP> = ({ t, lt }) => {
     <Svg>
       <Cam cx={1000} cy={780} z={1.1} t={t}>
         <Ditch t={t} />
-        <ellipse cx={1000} cy={1010} rx={600} ry={34} fill="#8e1a12" opacity={0.85} />
-        {Array.from({ length: 18 }).map((_, i) => <Tomato key={i} x={380 + rnd(i) * 1000} y={1000 + rnd(i + 3) * 34} r={12 + rnd(i) * 12} col="#a82018" />)}
-        <Person x={780} y={960} t={t} {...dClothes} mood="shock" blood={1} armL={16} armR={16} lookY={0.8} lookX={1} />
+        <ellipse cx={520} cy={1010} rx={620} ry={34} fill="#8e1a12" opacity={0.85} />
+        {Array.from({ length: 18 }).map((_, i) => <Tomato key={i} x={160 + rnd(i) * 800} y={1000 + rnd(i + 3) * 34} r={12 + rnd(i) * 12} col="#a82018" />)}
+        <Person x={620} y={1010} t={t} {...dClothes} flip mood="shock" blood={1} armL={16} armR={16} lookY={0.8} lookX={1} />
       </Cam>
       <Rain t={t} o={0.55} />
       <g transform="translate(1360 160)" opacity={ramp(lt, 0.6, 1.0)}>
