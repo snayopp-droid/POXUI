@@ -14,6 +14,7 @@ import { Fura } from "./Fura";
 import { BiletTest } from "./bilet/Test";
 import { Bilet } from "./Bilet";
 import { BiletThumb, BiletThumb2 } from "./bilet/Thumb";
+import { BiletShort, SHORT_FRAMES } from "./bilet/Short";
 import { DURATION_FRAMES as BILET_FRAMES } from "./bilet/timeline";
 import { Pixi3DDemo, PIXI3D_FRAMES } from "./Pixi3DDemo";
 import { DURATION_FRAMES, FPS, HEIGHT, WIDTH } from "./timeline";
@@ -137,6 +138,7 @@ export const RemotionRoot: React.FC = () => {
         height={HEIGHT}
       />
       <Composition id="BiletEp1" component={Bilet} durationInFrames={BILET_FRAMES} fps={30} width={1920} height={1080} />
+      <Composition id="BiletShort" component={BiletShort} durationInFrames={SHORT_FRAMES} fps={30} width={1080} height={1920} />
       <Still id="BiletThumb" component={BiletThumb} width={1920} height={1080} />
       <Still id="BiletThumb2" component={BiletThumb2} width={1920} height={1080} />
       <Composition id="BiletTest" component={BiletTest} durationInFrames={60} fps={30} width={1920} height={1080} />

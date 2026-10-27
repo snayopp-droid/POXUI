@@ -8,3 +8,4 @@ out
 
 # готовые фильмы
 films/**/*.mp4
+public/bilet/ep1.mp4
