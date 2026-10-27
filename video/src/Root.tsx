@@ -15,6 +15,9 @@ import { BiletTest } from "./bilet/Test";
 import { Bilet } from "./Bilet";
 import { A80Model } from "./anime80/Model";
 import { Anime80, A80_FRAMES } from "./anime80/Anime80";
+import { Test3D } from "./after/Test3D";
+import { Mini3D } from "./after/Mini3D";
+import { Film, FILM_SEC } from "./after/Film";
 import { BiletThumb, BiletThumb2 } from "./bilet/Thumb";
 import { BiletShort, SHORT_FRAMES } from "./bilet/Short";
 import { DURATION_FRAMES as BILET_FRAMES } from "./bilet/timeline";
@@ -142,6 +145,9 @@ export const RemotionRoot: React.FC = () => {
       <Composition id="BiletEp1" component={Bilet} durationInFrames={BILET_FRAMES} fps={30} width={1920} height={1080} />
       <Composition id="BiletShort" component={BiletShort} durationInFrames={SHORT_FRAMES} fps={30} width={1080} height={1920} />
       <Composition id="Anime80Test" component={Anime80} durationInFrames={A80_FRAMES} fps={24} width={1920} height={1080} />
+      <Composition id="After3DTest" component={Test3D} durationInFrames={72} fps={24} width={1920} height={1080} />
+      <Composition id="AfterFilm" component={Film} durationInFrames={FILM_SEC * 24} fps={24} width={1920} height={1080} />
+      <Composition id="Mini3D" component={Mini3D} durationInFrames={10} fps={24} width={640} height={360} />
       <Still id="A80Model" component={A80Model} width={1920} height={1080} />
       <Still id="BiletThumb" component={BiletThumb} width={1920} height={1080} />
       <Still id="BiletThumb2" component={BiletThumb2} width={1920} height={1080} />
