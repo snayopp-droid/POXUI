@@ -11,6 +11,9 @@ import { Forest5 } from "./Forest5";
 import { Plague } from "./Plague";
 import { Metro } from "./Metro";
 import { Fura } from "./Fura";
+import { BiletTest } from "./bilet/Test";
+import { Bilet } from "./Bilet";
+import { DURATION_FRAMES as BILET_FRAMES } from "./bilet/timeline";
 import { Pixi3DDemo, PIXI3D_FRAMES } from "./Pixi3DDemo";
 import { DURATION_FRAMES, FPS, HEIGHT, WIDTH } from "./timeline";
 import { DURATION_FRAMES as ACTION_FRAMES } from "./timeline2";
@@ -132,6 +135,8 @@ export const RemotionRoot: React.FC = () => {
         width={WIDTH}
         height={HEIGHT}
       />
+      <Composition id="BiletEp1" component={Bilet} durationInFrames={BILET_FRAMES} fps={30} width={1920} height={1080} />
+      <Composition id="BiletTest" component={BiletTest} durationInFrames={60} fps={30} width={1920} height={1080} />
     </>
   );
 };
