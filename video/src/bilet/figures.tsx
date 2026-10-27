@@ -278,7 +278,7 @@ export const Profile: React.FC<{
         {lid > 0.05 && <path d={`M54 -28 Q70 ${-36 + lid * 14} 88 -28 L88 -26 Q70 ${-30 + lid * 8} 54 -26 Z`} fill={skin} />}
       </g>
       {/* рот */}
-      <path d={`M88 ${50 + mouth * 3} Q96 ${50 - smile * 4 + mouth * 2} 102 ${48 - smile * 3}`} stroke={mix(skinD, "#3a1a14", 0.4)} strokeWidth={3.5} strokeLinecap="round" fill="none" />
+      <path d={`M88 ${50 + mouth * 3} Q96 ${50 - Math.max(0, smile) * 4 + mouth * 2} 102 ${48 - smile * (smile < 0 ? 8 : 3)}`} stroke={mix(skinD, "#3a1a14", 0.4)} strokeWidth={3.5} strokeLinecap="round" fill="none" />
       {mouth > 0.2 && <ellipse cx={98} cy={52} rx={4} ry={mouth * 5} fill="#2a1410" opacity={0.85} />}
       {/* слеза */}
       {tear > 0 && <ellipse cx={70} cy={-10 + tear * 70} rx={3.5} ry={6} fill={light} opacity={0.75 * cl(tear * 3) * (1 - cl((tear - 0.9) * 10))} />}

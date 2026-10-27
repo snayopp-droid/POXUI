@@ -1,4 +1,4 @@
-import { Composition } from "remotion";
+import { Composition, Still } from "remotion";
 import { Survival } from "./Survival";
 import { Action } from "./Action";
 import { Home } from "./Home";
@@ -13,6 +13,7 @@ import { Metro } from "./Metro";
 import { Fura } from "./Fura";
 import { BiletTest } from "./bilet/Test";
 import { Bilet } from "./Bilet";
+import { BiletThumb, BiletThumb2 } from "./bilet/Thumb";
 import { DURATION_FRAMES as BILET_FRAMES } from "./bilet/timeline";
 import { Pixi3DDemo, PIXI3D_FRAMES } from "./Pixi3DDemo";
 import { DURATION_FRAMES, FPS, HEIGHT, WIDTH } from "./timeline";
@@ -136,6 +137,8 @@ export const RemotionRoot: React.FC = () => {
         height={HEIGHT}
       />
       <Composition id="BiletEp1" component={Bilet} durationInFrames={BILET_FRAMES} fps={30} width={1920} height={1080} />
+      <Still id="BiletThumb" component={BiletThumb} width={1920} height={1080} />
+      <Still id="BiletThumb2" component={BiletThumb2} width={1920} height={1080} />
       <Composition id="BiletTest" component={BiletTest} durationInFrames={60} fps={30} width={1920} height={1080} />
     </>
   );

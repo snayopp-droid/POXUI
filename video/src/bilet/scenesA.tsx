@@ -159,7 +159,7 @@ export const STitle: React.FC<SP> = ({ t, lt, dur }) => {
 };
 
 /* ───────── 5. снег → Москва (переход через снег) ───────── */
-const MoscowYard: React.FC<{ t: number; pan?: number; night?: number }> = ({ t, pan = 0, night = 0 }) => (
+export const MoscowYard: React.FC<{ t: number; pan?: number; night?: number }> = ({ t, pan = 0, night = 0 }) => (
   <g>
     <Sky id={`msk${Math.round(night * 10)}`} top={mix("#8e949c", "#141821", night)} mid={mix("#a6aab0", "#1d222c", night)} bot={mix("#b9bbbd", "#262b34", night)} y1={900} />
     <g transform={`translate(${-pan * 0.2} 0)`}>
