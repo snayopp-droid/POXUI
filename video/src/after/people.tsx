@@ -19,6 +19,8 @@ export type Outfit = {
   zombie?: number;
   /** полоски/клетка на рубашке 0..1 */
   stripe?: number;
+  /** причёска: short | crop | long | bun | bald (по умолчанию — по полу) */
+  hairStyle?: "short" | "crop" | "long" | "bun" | "bald";
 };
 
 export type Pose = { clip: string; time: number; weight?: number; loop?: boolean }[];
@@ -29,6 +31,47 @@ const GROUPS: Record<string, number> = {
   upperarm_l: 1, upperarm_r: 1, lowerarm_l: 1, lowerarm_r: 1,
   pelvis: 2, thigh_l: 2, thigh_r: 2, calf_l: 2, calf_r: 2,
   foot_l: 3, foot_r: 3, ball_l: 3, ball_r: 3,
+};
+
+const makeHair = (style: string, color: string) => {
+  const g = new THREE.Group();
+  g.userData.hairCap = true;
+  if (style === "bald") return g;
+  const mat = new THREE.MeshStandardMaterial({ color, roughness: 0.85, side: THREE.DoubleSide });
+  const cap = (len: number, sx: number, sy: number, sz: number, y: number, z: number, rx: number) => {
+    const m = new THREE.Mesh(new THREE.SphereGeometry(0.1, 22, 14, 0, Math.PI * 2, 0, Math.PI * len), mat);
+    m.scale.set(sx, sy, sz);
+    m.position.set(0, y, z);
+    m.rotation.x = rx;
+    m.castShadow = true;
+    g.add(m);
+    return m;
+  };
+  if (style === "crop") cap(0.46, 1.02, 1.12, 1.08, 0.124, -0.012, -0.3);
+  else cap(0.55, 1.06, 1.16, 1.14, 0.122, -0.02, -0.34);
+  if (style === "long") {
+    const back = new THREE.Mesh(new THREE.BoxGeometry(0.2, 0.36, 0.07), mat);
+    back.position.set(0, -0.04, -0.105);
+    back.castShadow = true;
+    g.add(back);
+    for (const x of [-0.098, 0.098]) {
+      const side = new THREE.Mesh(new THREE.BoxGeometry(0.035, 0.26, 0.11), mat);
+      side.position.set(x, 0.0, -0.05);
+      g.add(side);
+    }
+  }
+  if (style === "bun") {
+    const bun = new THREE.Mesh(new THREE.SphereGeometry(0.06, 14, 10), mat);
+    bun.position.set(0, 0.2, -0.06);
+    g.add(bun);
+  }
+  if (style === "short") {
+    const nape = new THREE.Mesh(new THREE.SphereGeometry(0.095, 16, 10, 0, Math.PI * 2, Math.PI * 0.45, Math.PI * 0.22), mat);
+    nape.scale.set(1.0, 1.15, 1.05);
+    nape.position.set(0, 0.11, -0.03);
+    g.add(nape);
+  }
+  return g;
 };
 
 const zoned = new WeakSet<THREE.BufferGeometry>();
@@ -113,7 +156,7 @@ float vn(vec2 p){ vec2 i=floor(p), f=fract(p); f=f*f*(3.0-2.0*f); return mix(mix
   return m;
 };
 
-const DEFAULT: Required<Outfit> = { skin: "#ffffff", shirt: "#6b7f9a", shirt2: "#cfd6e0", pants: "#2c3a56", shoes: "#2a2a2a", hair: "#3a2a1f", sleeve: 0.3, shorts: 0, zombie: 0, stripe: 0 };
+const DEFAULT: Required<Outfit> = { hairStyle: "short", skin: "#ffffff", shirt: "#6b7f9a", shirt2: "#cfd6e0", pants: "#2c3a56", shoes: "#2a2a2a", hair: "#3a2a1f", sleeve: 0.3, shorts: 0, zombie: 0, stripe: 0 };
 
 export const Person: React.FC<{
   kind: "male" | "female";
@@ -154,6 +197,10 @@ export const Person: React.FC<{
         }
       }
     });
+    if (bones.Head) {
+      const style = o.hairStyle === "short" && kind === "female" ? "long" : o.hairStyle;
+      bones.Head.add(makeHair(style, o.hair));
+    }
     const mixer = new THREE.AnimationMixer(root);
     const actions = new Map<string, THREE.AnimationAction>();
     return { root, bones, mixer, actions };
@@ -163,6 +210,10 @@ export const Person: React.FC<{
   useLayoutEffect(() => {
     // цвета меняются между кадрами (одежда одного персонажа — постоянна, но компонент общий)
     rig.root.traverse((c) => {
+      if (c.userData.hairCap) {
+        c.visible = !hideHair;
+        c.traverse((m) => ((m as THREE.Mesh).material as THREE.MeshStandardMaterial | undefined)?.color?.set(o.hair));
+      }
       const mesh = c as THREE.Mesh;
       if (!mesh.isMesh) return;
       const mat = mesh.material as THREE.MeshStandardMaterial;

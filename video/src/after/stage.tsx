@@ -16,7 +16,7 @@ export const Rig: React.FC<{ cam: Cam }> = ({ cam }) => {
     c.lookAt(...cam.look);
     c.fov = cam.fov ?? 40;
     c.near = 0.1;
-    c.far = 600;
+    c.far = 2000;
     c.updateProjectionMatrix();
     invalidate();
   });
@@ -44,7 +44,7 @@ export const Stage3D: React.FC<{ width: number; height: number; cam: Cam; mood: 
     height={height}
     shadows="soft"
     gl={{ antialias: true, toneMapping: THREE.ACESFilmicToneMapping, toneMappingExposure: mood.exposure ?? 1.0, outputColorSpace: THREE.SRGBColorSpace }}
-    camera={{ fov: 40, position: [0, 2, 10], near: 0.1, far: 600 }}
+    camera={{ fov: 40, position: [0, 2, 10], near: 0.1, far: 2000 }}
   >
     <Suspense fallback={null}>
       <Rig cam={cam} />

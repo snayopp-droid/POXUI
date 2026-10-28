@@ -23,6 +23,8 @@ export type Act = {
   scale?: number;
   mod?: (b: Bones) => void;
   hideHair?: boolean;
+  /** чемодан рядом (катит справа) */
+  case?: boolean;
 };
 
 export const npcOutfit = (i: number, z = 0): Outfit => ({
