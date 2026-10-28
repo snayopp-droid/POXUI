@@ -106,8 +106,8 @@ const neighShot = (te: number): Shot => {
 
 /* ───── подписи ───── */
 const CAPS: Cap[] = [
-  { t0: -0.3, t1: 6.9, y: "top", lines: [{ text: "ЧТО, ЕСЛИ" }, { text: "ИСЧЕЗНЕТ" }, { text: "СВЕТ?", red: true }], size: 136 },
-  { t0: 3.4, t1: 6.9, y: "bottom", lines: [{ text: "БЕЗ ЛИФТА." }, { text: "БЕЗ ИНТЕРНЕТА." }], size: 92 },
+  { t0: -0.3, t1: 6.9, y: "top", lines: [{ text: "ПОЛНЫЙ" }, { text: "БЛЭКАУТ", red: true }], size: 150 },
+  { t0: 1.8, t1: 6.9, y: "bottom", lines: [{ text: "БЕЗ СВЕТА." }, { text: "БЕЗ ЛИФТА." }, { text: "БЕЗ ИНТЕРНЕТА." }], size: 88 },
   { t0: 7.6, t1: 12.6, y: "bottom", lines: [{ text: "НЕ ПАНИКУЙ." }, { text: "ВКЛЮЧИ ФОНАРИК" }], size: 100 },
   { t0: 13.6, t1: 17.4, y: "bottom", lines: [{ text: "ПРОВЕРЬ:" }, { text: "СВЕТ ТОЛЬКО" }, { text: "У ТЕБЯ?" }], size: 100 },
   { t0: 17.9, t1: 20.1, y: "bottom", lines: [{ text: "НЕ ПОЛЬЗУЙСЯ" }, { text: "ЛИФТОМ" }], size: 112 },

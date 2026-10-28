@@ -17,7 +17,7 @@ def seg(path, start, dur=None, vol=1.0, fi=0, fo=0, loop=0, norm=0):
     parts.append(f); return lab
 def bus(labs, name):
     parts.append("".join(f"[{l}]" for l in labs) + f"amix=inputs={len(labs)}:normalize=0:duration=longest,apad=whole_dur={TOTAL}[{name}]")
-vo = [seg(V + n + ".mp3", t, norm=1) for n, t in [("h0", 0.2), ("l1", 8.0), ("l2", 17.6), ("l3", 22.8), ("l4", 32.0), ("l5", 37.0), ("l6", 45.0)]]
+vo = [seg(V + n + ".mp3", t, norm=1) for n, t in [("h1", 0.2), ("l1", 8.0), ("l2", 17.6), ("l3", 22.8), ("l4", 32.0), ("l5", 37.0), ("l6", 45.0)]]
 bus(vo, "vo")
 sfx = [seg(S + "city.mp3", 0, 9.0, .5, 0.3, 1.5, 1), seg(S + "powerdown.mp3", 2.88, None, .75),
        seg(S + "click.mp3", 10.53, None, .8), seg(S + "tap.mp3", 21.4, None, .4),
