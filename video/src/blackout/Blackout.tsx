@@ -18,11 +18,11 @@ const W = 1080, H = 1920;
 
 /* ───── свет ───── */
 const mood = (o: Partial<Mood> & Pick<Mood, "sky">): Mood => ({ fog: "#2a3a5c", fogNear: 40, fogFar: 260, sun: "#a8c0ff", sunI: 1, sunPos: [-25, 45, 35], hemiSky: "#6f86b8", hemiGround: "#2a2a34", hemiI: 1, exposure: 1.3, ...o });
-const NIGHT = mood({ sky: ["#0b1224", "#1c2a48", "#3a4a72"], fogNear: 45, fogFar: 300, sunI: 1.15, hemiI: 1.25, exposure: 1.35 });
-const ROOM = mood({ sky: ["#0b1224", "#1c2a48", "#3a4a72"], sunI: 0.0, hemiI: 1.0, hemiSky: "#8aa0d0", hemiGround: "#3a3a46", exposure: 1.55, fogNear: 100, fogFar: 400 });
+export const NIGHT = mood({ sky: ["#0b1224", "#1c2a48", "#3a4a72"], fogNear: 45, fogFar: 300, sunI: 1.15, hemiI: 1.25, exposure: 1.35 });
+export const ROOM = mood({ sky: ["#0b1224", "#1c2a48", "#3a4a72"], sunI: 0.0, hemiI: 1.0, hemiSky: "#8aa0d0", hemiGround: "#3a3a46", exposure: 1.55, fogNear: 100, fogFar: 400 });
 
 /* ───── герой ───── */
-const HERO = { skin: "#e8c4a4", shirt: "#1d2c4d", shirt2: "#2c3d66", stripe: 0, pants: "#6a6e76", shoes: "#4a4038", hair: "#2a1f18", sleeve: 0.7, hairStyle: "short" as const };
+export const HERO = { skin: "#e8c4a4", shirt: "#1d2c4d", shirt2: "#2c3d66", stripe: 0, pants: "#6a6e76", shoes: "#4a4038", hair: "#2a1f18", sleeve: 0.7, hairStyle: "short" as const };
 const SLOT_X = [-2.0, -1.7, -1.4, -1.1, -0.8, -0.5];
 const TABLE_Y = 0.765;
 const ITEM_T0 = 13.0;
@@ -34,12 +34,12 @@ const lerp3 = (a: V3, b: V3, k: number): V3 => [lerp(a[0], b[0], k), lerp(a[1], 
 const toArr = (v: THREE.Vector3): V3 => [v.x, v.y, v.z];
 
 type Hand = { target: THREE.Vector3; w: number };
-type Hero = { pos: V3; rotY: number; clip: string; time: number; right: Hand | null; left: Hand | null; head: number; headPitch: number };
+export type Hero = { pos: V3; rotY: number; clip: string; time: number; right: Hand | null; left: Hand | null; head: number; headPitch: number };
 
 const NONE = null;
 
 /** положение рук/предметов: всё — детерминированные функции времени */
-const heroState = (t: number): Hero => {
+export const heroState = (t: number): Hero => {
   // базовая стойка
   let pos: V3 = [0.1, 0, -0.7];
   let rotY = Math.PI;
@@ -176,7 +176,7 @@ const itemPhase = (i: number, t: number) => {
   return { placed: t > s + 0.7, carried: t > s + 0.04 && t <= s + 0.7, s };
 };
 
-const Beam: React.FC<{ from: V3; to: V3; r: number; o: number }> = ({ from, to, r, o }) => {
+export const Beam: React.FC<{ from: V3; to: V3; r: number; o: number }> = ({ from, to, r, o }) => {
   const m = useMemo(() => {
     const a = new THREE.Vector3(...from), b = new THREE.Vector3(...to);
     const dir = b.clone().sub(a);
@@ -193,7 +193,7 @@ const Beam: React.FC<{ from: V3; to: V3; r: number; o: number }> = ({ from, to, 
   return <primitive object={m} />;
 };
 
-const Spot: React.FC<{ from: V3; to: V3; intensity: number; angle?: number }> = ({ from, to, intensity, angle = 0.5 }) => {
+export const Spot: React.FC<{ from: V3; to: V3; intensity: number; angle?: number }> = ({ from, to, intensity, angle = 0.5 }) => {
   const target = useMemo(() => new THREE.Object3D(), []);
   return (
     <>
@@ -203,7 +203,7 @@ const Spot: React.FC<{ from: V3; to: V3; intensity: number; angle?: number }> = 
   );
 };
 
-const Shadow: React.FC<{ p: V3; s: number }> = ({ p, s }) => {
+export const Shadow: React.FC<{ p: V3; s: number }> = ({ p, s }) => {
   const tex = useMemo(() => {
     const c = document.createElement("canvas");
     c.width = c.height = 64;
@@ -224,9 +224,9 @@ const Shadow: React.FC<{ p: V3; s: number }> = ({ p, s }) => {
 };
 
 /* ───── сцены ───── */
-type Shot = { cam: Cam; mood: Mood; focus: V3; scene: React.ReactNode; acts: Act[] };
+export type Shot = { cam: Cam; mood: Mood; focus: V3; scene: React.ReactNode; acts: Act[] };
 
-const heroAct = (h: Hero, extra?: (b: Record<string, THREE.Object3D>) => void): Act => ({
+export const heroAct = (h: Hero, extra?: (b: Record<string, THREE.Object3D>) => void): Act => ({
   id: "hero", kind: "male", outfit: HERO, pos: h.pos, rotY: h.rotY,
   pose: [{ clip: h.clip, time: h.time }],
   mod: (b) => {
@@ -239,7 +239,7 @@ const heroAct = (h: Hero, extra?: (b: Record<string, THREE.Object3D>) => void): 
   },
 });
 
-const shotAt = (t: number): Shot => {
+export const shotAt = (t: number): Shot => {
   /* ─── сцена 1: город теряет свет (0–4 c) ─── */
   if (t < 4.0) {
     const d1 = eio(ramp(t, 0, 1.5));
@@ -377,7 +377,7 @@ const shotAt = (t: number): Shot => {
 };
 
 /* ───── подписи (HTML-слой) ───── */
-type Cap = { t0: number; t1: number; y: "top" | "bottom" | "center"; lines: { text: string; red?: boolean }[]; size?: number };
+export type Cap = { t0: number; t1: number; y: "top" | "bottom" | "center"; lines: { text: string; red?: boolean }[]; size?: number };
 const CAPS: Cap[] = [
   { t0: 0.35, t1: 3.9, y: "top", lines: [{ text: "ЕСЛИ ИСЧЕЗ" }, { text: "СВЕТ", red: true }], size: 132 },
   { t0: 4.5, t1: 7.8, y: "bottom", lines: [{ text: "СОХРАНЯЙ" }, { text: "СПОКОЙСТВИЕ" }], size: 108 },
@@ -390,7 +390,7 @@ const CAPS: Cap[] = [
   { t0: 23.4, t1: 25.5, y: "center", lines: [{ text: "СОБЕРИСЬ." }, { text: "ПРОВЕРЬ" }, { text: "ИНФОРМАЦИЮ." }, { text: "БЕРЕГИ СВЯЗЬ." }], size: 100 },
 ];
 
-const Caption: React.FC<{ cap: Cap; t: number }> = ({ cap, t }) => {
+export const Caption: React.FC<{ cap: Cap; t: number }> = ({ cap, t }) => {
   const a = ramp(t, cap.t0, cap.t0 + 0.25) * (1 - ramp(t, cap.t1 - 0.2, cap.t1));
   if (a <= 0) return null;
   const top = cap.y === "top" ? 250 : cap.y === "bottom" ? 1290 : 620;

@@ -274,7 +274,19 @@ export const Apartment: React.FC<{ lamp?: number; doorOpen?: number; view?: numb
 };
 
 /** подъезд: коридор с лифтом (двери закрыты, индикатор не горит) */
-export const Hallway: React.FC = () => {
+export const Fridge: React.FC = () => (
+  <group>
+    <Box p={[-1.97, 0.9, -0.6]} s={[0.66, 1.8, 0.66]} c="#cfd4da" r={0.35} m={0.3} />
+    <Box p={[-1.635, 0.85, -0.6]} s={[0.02, 0.02, 0.66]} c="#3a3e44" r={0.6} shadow={false} />
+    <Box p={[-1.615, 1.3, -0.38]} s={[0.03, 0.45, 0.03]} c="#8a9098" r={0.25} m={0.8} shadow={false} />
+    <Box p={[-1.615, 0.55, -0.38]} s={[0.03, 0.3, 0.03]} c="#8a9098" r={0.25} m={0.8} shadow={false} />
+    <Box p={[-1.63, 1.55, -0.75]} s={[0.012, 0.07, 0.07]} c="#c45a3a" shadow={false} />
+    <Box p={[-1.63, 1.45, -0.62]} s={[0.012, 0.06, 0.09]} c="#3a7aa8" shadow={false} />
+  </group>
+);
+
+/** подъезд: коридор с лифтом; neighbor (0..1) — дверь соседей слева открывается внутрь квартиры */
+export const Hallway: React.FC<{ neighbor?: number }> = ({ neighbor }) => {
   const floor = useMemo(() => { const t = concreteTex("#8a8a86").clone(); t.repeat.set(1, 4); t.needsUpdate = true; return t; }, []);
   return (
     <group>
@@ -287,13 +299,36 @@ export const Hallway: React.FC = () => {
         <planeGeometry args={[2.6, 9]} />
         <meshStandardMaterial color="#cfcac0" side={THREE.DoubleSide} />
       </mesh>
-      {([-1.3, 1.3] as const).map((x) => (
+      {([-1.3, 1.3] as const).filter((x) => neighbor === undefined || x > 0).map((x) => (
         <mesh key={x} position={[x, 1.35, -1.5]} rotation={[0, x < 0 ? Math.PI / 2 : -Math.PI / 2, 0]} receiveShadow>
           <planeGeometry args={[9, 2.7]} />
           <meshStandardMaterial color="#b4aea0" roughness={0.95} side={THREE.DoubleSide} />
         </mesh>
       ))}
-      <Box p={[-1.27, 0.5, -1.5]} s={[0.06, 1.0, 9]} c="#6f7a72" r={0.8} shadow={false} />
+      {neighbor === undefined ? (
+        <Box p={[-1.27, 0.5, -1.5]} s={[0.06, 1.0, 9]} c="#6f7a72" r={0.8} shadow={false} />
+      ) : (
+        <>
+          {[-3.9875, 0.9875].map((z) => (
+            <React.Fragment key={z}>
+              <mesh position={[-1.3, 1.35, z]} rotation={[0, Math.PI / 2, 0]}><planeGeometry args={[4.025, 2.7]} /><meshStandardMaterial color="#b4aea0" roughness={0.95} side={THREE.DoubleSide} /></mesh>
+              <Box p={[-1.27, 0.5, z]} s={[0.06, 1.0, 4.025]} c="#6f7a72" r={0.8} shadow={false} />
+            </React.Fragment>
+          ))}
+          <mesh position={[-1.3, 2.38, -1.5]} rotation={[0, Math.PI / 2, 0]}><planeGeometry args={[0.95, 0.64]} /><meshStandardMaterial color="#b4aea0" roughness={0.95} side={THREE.DoubleSide} /></mesh>
+          {/* квартира соседей */}
+          <mesh position={[-2.65, 0.002, -1.5]} rotation={[-Math.PI / 2, 0, 0]}><planeGeometry args={[2.7, 4]} /><meshStandardMaterial color="#5a4632" roughness={0.8} /></mesh>
+          <mesh position={[-2.65, 2.7, -1.5]} rotation={[Math.PI / 2, 0, 0]}><planeGeometry args={[2.7, 4]} /><meshStandardMaterial color="#cfc6b4" side={THREE.DoubleSide} /></mesh>
+          <mesh position={[-3.9, 1.35, -1.5]} rotation={[0, Math.PI / 2, 0]}><planeGeometry args={[4, 2.7]} /><meshStandardMaterial color="#8a7a62" roughness={0.95} side={THREE.DoubleSide} /></mesh>
+          {[-3.5, 0.5].map((z) => <mesh key={z} position={[-2.65, 1.35, z]}><planeGeometry args={[2.7, 2.7]} /><meshStandardMaterial color="#7f705a" roughness={0.95} side={THREE.DoubleSide} /></mesh>)}
+          <Box p={[-3.6, 0.45, -1.5]} s={[0.5, 0.9, 1.4]} c="#4a3a2c" r={0.8} />
+          <Box p={[-3.6, 1.2, -1.5]} s={[0.12, 0.5, 0.6]} c="#c9a14a" r={0.7} shadow={false} />
+          {neighbor > 0.02 && <pointLight position={[-2.4, 1.8, -1.6]} color="#ffb766" intensity={12 * neighbor} distance={7} decay={1.6} />}
+          <group position={[-1.27, 0, -1.975]} rotation={[0, -neighbor * 1.2, 0]}>
+            <Box p={[0, 1.03, 0.475]} s={[0.05, 2.06, 0.95]} c="#5a4a3c" r={0.7} />
+          </group>
+        </>
+      )}
       {/* лифт */}
       <Box p={[0, 1.15, -5.95]} s={[2.0, 2.3, 0.1]} c="#2a2d33" r={0.5} m={0.5} />
       {[-0.45, 0.45].map((x) => <Box key={x} p={[x, 1.05, -5.88]} s={[0.84, 2.05, 0.04]} c="#9aa0a8" r={0.3} m={0.8} />)}
@@ -307,7 +342,7 @@ export const Hallway: React.FC = () => {
       ))}
       {/* дверь квартиры в коридоре */}
       <Box p={[1.27, 1.03, 1.2]} s={[0.05, 2.06, 0.95]} c="#6e5a46" r={0.7} />
-      <Box p={[-1.27, 1.03, -1.5]} s={[0.05, 2.06, 0.95]} c="#5a4a3c" r={0.7} />
+      {neighbor === undefined && <Box p={[-1.27, 1.03, -1.5]} s={[0.05, 2.06, 0.95]} c="#5a4a3c" r={0.7} />}
     </group>
   );
 };

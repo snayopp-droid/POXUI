@@ -20,6 +20,7 @@ import { Mini3D } from "./after/Mini3D";
 import { Film, FILM_SEC } from "./after/Film";
 import { NYFilm, NY_SEC } from "./ny/Film";
 import { BlackoutVideo, BLACKOUT_FRAMES } from "./blackout/Blackout";
+import { BlackoutVideo60, BLACKOUT60_FRAMES } from "./blackout/Blackout60";
 import { BiletThumb, BiletThumb2 } from "./bilet/Thumb";
 import { BiletShort, SHORT_FRAMES } from "./bilet/Short";
 import { DURATION_FRAMES as BILET_FRAMES } from "./bilet/timeline";
@@ -151,6 +152,7 @@ export const RemotionRoot: React.FC = () => {
       <Composition id="AfterFilm" component={Film} durationInFrames={FILM_SEC * 24} fps={24} width={1920} height={1080} />
       <Composition id="NYFilm" component={NYFilm} durationInFrames={NY_SEC * 24} fps={24} width={1920} height={1080} />
       <Composition id="BlackoutVideo" component={BlackoutVideo} durationInFrames={BLACKOUT_FRAMES} fps={30} width={1080} height={1920} />
+      <Composition id="BlackoutVideo60" component={BlackoutVideo60} durationInFrames={BLACKOUT60_FRAMES} fps={30} width={1080} height={1920} />
       <Composition id="Mini3D" component={Mini3D} durationInFrames={10} fps={24} width={640} height={360} />
       <Still id="A80Model" component={A80Model} width={1920} height={1080} />
       <Still id="BiletThumb" component={BiletThumb} width={1920} height={1080} />
