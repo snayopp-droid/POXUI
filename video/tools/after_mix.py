@@ -33,9 +33,10 @@ SFX = [
 ins, parts = [], []
 def add(path):
     ins.extend(["-i", path]); return len(ins) // 2 - 1
-def seg(path, start, dur, vol, fi=0, fo=0, loop=0):
+def seg(path, start, dur, vol, fi=0, fo=0, loop=0, norm=0):
     i = add(path); lab = f"x{len(parts)}"
     f = f"[{i}:a]aformat=sample_rates=44100:channel_layouts=stereo"
+    if norm: f += ",loudnorm=I=-16:TP=-2:LRA=7,aformat=sample_rates=44100:channel_layouts=stereo"
     if loop: f += ",aloop=loop=-1:size=2000000000"
     if dur: f += f",atrim=duration={dur}"
     f += f",volume={vol}"
@@ -45,9 +46,9 @@ def seg(path, start, dur, vol, fi=0, fo=0, loop=0):
     parts.append(f); return lab
 def bus(labs, name):
     parts.append("".join(f"[{l}]" for l in labs) + f"amix=inputs={len(labs)}:normalize=0:duration=longest,apad=whole_dur={TOTAL}[{name}]")
-vo = [seg(V + k + ".mp3", st, None, 1.0) for k, st in cues.items()]
+vo = [seg(V + k + ".mp3", st, None, 1.0, norm=1) for k, st in cues.items()]
 bus(vo, "vo")
-sf = [seg(S + f + ".mp3", st, d, v) for f, st, d, v in SFX]
+sf = [seg(S + f + ".mp3", st, d, v * 0.55) for f, st, d, v in SFX]
 bus(sf, "sfx")
 bd = [seg(S + f + ".mp3", st, d, v, fi, fo, lp) for f, st, d, v, fi, fo, lp in BEDS + MUSIC]
 bus(bd, "bed")
