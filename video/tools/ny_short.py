@@ -3,8 +3,8 @@ import json, re, subprocess
 from PIL import Image, ImageDraw, ImageFont, ImageFilter
 SRC = "films/ny/iz-moskvy-v-nyu-york-ch1.mp4"
 OUT = "films/ny/short-9x16.mp4"
-SEG = [(98.4, 118.2), (153.4, 185.8)]
-CARD = (276.0, 281.0)
+SEG = [(153.4, 180.4)]
+CARD = (280.0, 283.4)
 cues = json.load(open("src/ny/cues.json"))["vo"]
 meta = json.load(open("tools/ny_vo_meta.json"))
 lines = {l[0]: re.sub(r"\[[^\]]*\]\s*", "", l[2]) for l in json.load(open("tools/ny_lines.json"))["lines"]}
@@ -54,13 +54,12 @@ d = ImageDraw.Draw(bg)
 F = lambda s, w="Bold": ImageFont.truetype(f"/usr/share/fonts/opentype/inter/Inter-{w}.otf", s)
 def center(txt, y, f, fill):
     w = d.textlength(txt, font=f); d.text(((W - w) / 2, y), txt, font=f, fill=fill)
-center("ПРОДОЛЖЕНИЕ", 640, F(104, "Bold"), (255, 255, 255))
-center("в полной версии", 770, F(58, "Medium"), (240, 217, 166))
-center("«Из Москвы в Нью-Йорк»", 900, F(66, "Bold"), (255, 255, 255))
-center("Часть 1 — на моём канале", 990, F(52, "Medium"), (220, 225, 235))
+center("ПОЛНАЯ ИСТОРИЯ", 660, F(96, "Bold"), (255, 255, 255))
+center("уже на канале", 790, F(60, "Medium"), (240, 217, 166))
+center("«Из Москвы в Нью-Йорк»", 920, F(66, "Bold"), (255, 255, 255))
+center("Часть 1 · Первая неделя", 1010, F(50, "Medium"), (220, 225, 235))
 d.rounded_rectangle((170, 1150, 910, 1260), 55, fill=(235, 60, 50))
 center("▶  Смотри полностью", 1172, F(54, "Bold"), (255, 255, 255))
-center("Подписывайся — скоро часть 2", 1330, F(44, "Medium"), (200, 205, 215))
 bg.save("/tmp/ny/card.png")
 
 fc = []
@@ -70,12 +69,11 @@ for i, (a, b) in enumerate(SEG):
     fc.append(f"[v{i}b]crop=1072:690:424:138,scale=1080:695[fg{i}]")
     fc.append(f"[bg{i}][fg{i}]overlay=0:575,setsar=1[s{i}]")
     fc.append(f"[0:a]atrim={a}:{b},asetpts=PTS-STARTPTS,afade=t=in:d=0.12,afade=t=out:st={b-a-0.15}:d=0.15[a{i}]")
-fc.append(f"[0:a]atrim={CARD[0]}:{CARD[1]},asetpts=PTS-STARTPTS,afade=t=in:d=0.2,afade=t=out:st=3.8:d=1.2[ac]")
+fc.append(f"[0:a]atrim={CARD[0]}:{CARD[1]},asetpts=PTS-STARTPTS,afade=t=in:d=0.2,afade=t=out:st=2.4:d=1.0[ac]")
 fc.append(f"[1:v]fps=24,format=yuv420p,fade=t=in:d=0.3,setsar=1[cv]")
-fc.append("[s0][s1]concat=n=2:v=1:a=0[body]")
-fc.append(f"[body]subtitles=/tmp/ny/short.ass:fontsdir=/usr/share/fonts/opentype/inter[bt]")
+fc.append(f"[s0]subtitles=/tmp/ny/short.ass:fontsdir=/usr/share/fonts/opentype/inter[bt]")
 fc.append("[bt][cv]concat=n=2:v=1:a=0[v]")
-fc.append("[a0][a1][ac]concat=n=3:v=0:a=1[a]")
-cmd = ["ffmpeg", "-y", "-loglevel", "error", "-i", SRC, "-loop", "1", "-t", "5", "-i", "/tmp/ny/card.png", "-filter_complex", ";".join(fc), "-map", "[v]", "-map", "[a]", "-c:v", "libx264", "-preset", "medium", "-crf", "20", "-pix_fmt", "yuv420p", "-c:a", "aac", "-b:a", "192k", "-movflags", "+faststart", OUT]
+fc.append("[a0][ac]concat=n=2:v=0:a=1[a]")
+cmd = ["ffmpeg", "-y", "-loglevel", "error", "-i", SRC, "-loop", "1", "-t", "3.4", "-i", "/tmp/ny/card.png", "-filter_complex", ";".join(fc), "-map", "[v]", "-map", "[a]", "-c:v", "libx264", "-preset", "medium", "-crf", "20", "-pix_fmt", "yuv420p", "-c:a", "aac", "-b:a", "192k", "-movflags", "+faststart", OUT]
 subprocess.run(cmd, check=True)
-print(round(off + 5, 1), "сек")
+print(round(off + 3.4, 1), "сек")
