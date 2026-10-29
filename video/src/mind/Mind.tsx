@@ -205,7 +205,7 @@ const scene = (t: number): Scn => {
     const thumbs = eio(ramp(t, 25.8, 26.3));
     const hero: Ch = { id: "hero", pos: [-1.0, 0, 0], rotY: 0.7, look: HERO, pose: { expr: t < 28.8 ? "happy" : "worried", armR: [1.3, 0.25], elbR: 1.0, gaze: 1 }, handR: <Paper /> };
     const fr: Ch = { id: "fr", pos: [1.0, 0, 0], rotY: -0.7, look: L.yellow, pose: { expr: "happy", armL: [lerp(0.1, 1.7, thumbs), 0.3], elbL: lerp(0.2, 1.3, thumbs), tilt: 0.06, gaze: -1 }, handL: <mesh position={[0, 0.0, 0.05]}><sphereGeometry args={[0.035, 8, 6]} /><M c="#101018" /></mesh> };
-    const cam: Cam = mixCam({ pos: [0.2, 1.3, 3.5], look: [0, 1.2, -0.5], fov: 36 }, { pos: [0.1, 1.3, 3.0], look: [0, 1.25, -0.5], fov: 34 }, ramp(t, 25.4, 30.8));
+    const cam: Cam = mixCam({ pos: [0.2, 1.4, 3.8], look: [0, 1.75, -0.5], fov: 38 }, { pos: [0.1, 1.4, 3.4], look: [0, 1.75, -0.5], fov: 36 }, ramp(t, 25.4, 30.8));
     return { cam, mood: SUNSET, env: <Park mood={SUNSET} />, chars: [hero, fr], anchors: { f1: headOf(fr.pos), f2: headOf(fr.pos) }, ring: { pos: headOf(hero.pos), ...ringState(t) } };
   }
 
