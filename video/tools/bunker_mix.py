@@ -2,15 +2,15 @@
 import json, os, subprocess, sys
 V = "public/bunker/vo/"; S = "public/bunker/sfx/"; M = "public/bunker/music/"
 script = json.load(open("src/bunker/script.json")); vo = json.load(open("src/bunker/vo.json"))
-CARDS = {"c02": 3, "c05": 3, "c07": 3, "c09": 3, "c10": 3, "c13": 3, "c14": 3, "c16": 3, "c18": 3, "c19": 3, "c20": 3, "c21": 3}
+CARDS = {k: 3.5 for k in ["c02","c05","c07","c09","c10","c13","c14","c16","c18","c19","c20","c21"]}
 AFTER = {"c01": 5}
-GAP = 1.0
+GAP = 1.8
 seg = {}; t = 0.0
 for c in script:
     t += CARDS.get(c["id"], 0)
     d = vo.get(c["id"], c["words"] / 2.55 + 0.6)
     seg[c["id"]] = (t, d + GAP); t += d + GAP + AFTER.get(c["id"], 0)
-TOTAL = t + 4
+TOTAL = t + 6
 print("total", round(TOTAL, 1))
 
 ins, parts = [], []
@@ -56,7 +56,7 @@ EV = [
  ("c20", .00, "geiger", 8, .5), ("c20", .50, "clang", None, .8), ("c20", .70, "wind", 12, .25), ("c20", .78, "birds", 10, .5),
  ("c21", .00, "ding", None, .3), ("c21", .25, "ding", None, .3), ("c21", .50, "ding", None, .3), ("c21", .75, "ding", None, .3),
  ("c22", .00, "ding", None, .3), ("c22", .25, "ding", None, .3), ("c22", .50, "ding", None, .3), ("c22", .75, "ding", None, .3),
- ("c23", .00, "alert", 3, .3), ("c23", .30, "birds", 10, .5),
+ ("c23", .00, "alert", 3, .3), ("c24", .60, "birds", 10, .5), ("c24", .00, "wind", 12, .15),
 ]
 sx = []
 for cid, fr, name, dur, vol in EV:

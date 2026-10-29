@@ -2,24 +2,24 @@ import script from "./script.json";
 import vo from "./vo.json";
 
 export type Seg = { kind: "chunk" | "card"; id: string; t0: number; d: number; beatW?: number[] };
-const GAP = 1.0;
+export const GAP = 1.8;
 export const wordsDur = (words: number) => words / 2.55 + 0.6;
 export const chunkDur = (id: string, words: number) => (vo as Record<string, number>)[id] ?? wordsDur(words);
 
 /** Порядок: интро-карточка, затем главы; карточки вставляются перед указанными кусками */
 export const CARDS: Record<string, { title: string; sub?: string; d: number }> = {
-  c02: { title: "DAY 0", sub: "THE ALERT", d: 3 },
-  c05: { title: "HOUR 1", sub: "THE FALLOUT", d: 3 },
-  c07: { title: "NIGHT 1", sub: "FIRST RULES", d: 3 },
-  c09: { title: "WEEK 2", sub: "COUNTING DAYS", d: 3 },
-  c10: { title: "MONTH 1", sub: "THE MATH OF FOOD", d: 3 },
-  c13: { title: "MONTH 2", sub: "THE HARDEST ENEMY", d: 3 },
-  c14: { title: "YEAR 1", sub: "NOT YET", d: 3 },
-  c16: { title: "YEAR 4", sub: "RENEWABLE FOOD", d: 3 },
-  c18: { title: "YEAR 8", sub: "THE HATCH", d: 3 },
-  c19: { title: "YEAR 10", sub: "FIRST STEPS OUTSIDE", d: 3 },
-  c20: { title: "YEAR 12", sub: "", d: 3 },
-  c21: { title: "WHAT WE LEARNED", sub: "8 RULES", d: 3 },
+  c02: { title: "DAY 0", sub: "THE ALERT", d: 3.5 },
+  c05: { title: "HOUR 1", sub: "THE FALLOUT", d: 3.5 },
+  c07: { title: "NIGHT 1", sub: "FIRST RULES", d: 3.5 },
+  c09: { title: "WEEK 2", sub: "COUNTING DAYS", d: 3.5 },
+  c10: { title: "MONTH 1", sub: "THE MATH OF FOOD", d: 3.5 },
+  c13: { title: "MONTH 2", sub: "THE HARDEST ENEMY", d: 3.5 },
+  c14: { title: "YEAR 1", sub: "NOT YET", d: 3.5 },
+  c16: { title: "YEAR 4", sub: "RENEWABLE FOOD", d: 3.5 },
+  c18: { title: "YEAR 8", sub: "THE HATCH", d: 3.5 },
+  c19: { title: "YEAR 10", sub: "FIRST STEPS OUTSIDE", d: 3.5 },
+  c20: { title: "YEAR 12", sub: "", d: 3.5 },
+  c21: { title: "WHAT WE LEARNED", sub: "8 RULES", d: 3.5 },
 };
 
 export const CARDS_AFTER: Record<string, { title: string; sub?: string; d: number }> = {
@@ -38,5 +38,5 @@ export const buildTimeline = (): { segs: Seg[]; total: number } => {
     const after = CARDS_AFTER[c.id];
     if (after) { segs.push({ kind: "card", id: c.id + "_after", t0: t, d: after.d }); t += after.d; }
   }
-  return { segs, total: t + 4 };
+  return { segs, total: t + 6 };
 };

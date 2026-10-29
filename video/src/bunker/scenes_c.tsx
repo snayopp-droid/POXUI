@@ -531,6 +531,34 @@ export const chunksC: Chunk[] = [
           <Fade o={ramp(p, 0.88, 1)} />
         </g>
       ) },
+    ],
+  },
+  /* ───────── c24: эпилог — 12 лет за 30 секунд ───────── */
+  {
+    id: "c24",
+    beats: [
+      ...([
+        ["YEAR 0", "THE ALERT"], ["YEAR 1", "ONE CANDLE"], ["YEAR 3", "THE TURBINE"], ["YEAR 5", "THE GARDEN"], ["YEAR 8", "THE QUESTION"], ["YEAR 12", "THE LIGHT"],
+      ] as [string, string][]).map(([yr, lab], i) => ({
+        w: 5,
+        r: ({ t, p }: { t: number; p: number }) => {
+          const k = ramp(t, 0, 0.4) * (1 - ramp(p, 0.9, 1));
+          const bg = [
+            <LivingRoom key="a" t={t} lamp={0.8} dim={0.25}><Seated t={t} expr="worry" /></LivingRoom>,
+            <LivingRoom key="b" t={t} lamp={0.35} dim={0.4}><Seated t={t} expr="neutral" /><Jar x={1130} y={692} c="#c9c0a0" /><Glow x={1130} y={640} r={260} o={0.5} id="ep1" /></LivingRoom>,
+            <WaterRoom key="c" t={t} lamp={0.8} dim={0.1} flow={1.2} />,
+            <GardenRoom key="d" t={t} lamp={0.45} dim={0.05} />,
+            <DoorRoom key="e" t={t} lamp={0.4} dim={0.3}><Person x={560} y={420} s={0.98} look={L.lily} pose={idle(t, { armL: [160, 140], armR: [160, 140], expr: "worry" })} /></DoorRoom>,
+            <g key="f"><Wasteland t={t} ash={0.1} gold={1} green={1} />{[0, 1, 2, 3].map((q) => <Person key={q} x={620 + q * 150} y={900} s={[0.8, 0.76, 0.78, 0.74][q]} look={[L.mark, L.elena, L.lily, L.noah][q]} pose={idle(t + q, { expr: "happy" })} />)}</g>,
+          ][i];
+          return (
+            <g>
+              <Cam a={{ x: 960, y: 540, z: 1.0 }} b={{ x: 1000, y: 560, z: 1.12 }} p={p}>{bg}</Cam>
+              <g opacity={k}><rect x={80} y={760} width={620} height={190} rx={10} fill="#0b100f" opacity={0.78} /><Txt x={110} y={860} size={96} c={C.amber} w={900} anchor="start" ls={4}>{yr}</Txt><Txt x={112} y={918} size={36} c={C.chalk} w={700} anchor="start" ls={6}>{lab}</Txt></g>
+            </g>
+          );
+        },
+      })),
       { w: 6, r: ({ t, p }) => (
         <SceneBG c="#0b100f">
           <Txt x={960} y={480} size={110} c={C.chalk} w={900} ls={4} o={eio(ramp(t, 0.4, 1.2))}>THANK YOU FOR WATCHING</Txt>

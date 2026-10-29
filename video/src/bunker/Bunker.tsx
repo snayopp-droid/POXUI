@@ -17,7 +17,7 @@ const CHUNKS: Record<string, Chunk> = {};
 [...chunksA, ...chunksB, ...chunksC].forEach((c) => (CHUNKS[c.id] = c));
 const TEXT: Record<string, string> = {};
 (script as { id: string; text: string }[]).forEach((c) => (TEXT[c.id] = c.text.replace(/^\[[^\]]*\]\s*/, "")));
-const GAP = 1.0;
+const GAP = 1.8;
 
 /** субтитры: предложения, время пропорционально числу символов */
 const subtitleAt = (id: string, t: number, d: number): string => {
