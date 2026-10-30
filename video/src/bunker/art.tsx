@@ -92,7 +92,16 @@ const Hair: React.FC<{ look: Look; r: number }> = ({ look, r }) => {
 };
 
 /** человек (вид спереди), начало координат — центр между стоп, вверх — отрицательный y */
-export const Person: React.FC<{ x: number; y: number; s?: number; flip?: boolean; look: Look; pose?: Pose; hood?: boolean; suit?: boolean; opacity?: number; head?: number }> = ({ x, y, s = 1, flip, look, pose = {}, suit, opacity = 1, head = 1 }) => {
+export type Hat = { kind: "beanie" | "cap" | "ushanka"; c: string };
+const HatShape: React.FC<{ h: Hat; r: number }> = ({ h, r }) => (
+  <g>
+    {h.kind === "beanie" && <g><path d={`M ${-r - 3} -2 Q ${-r - 6} ${-r - 18} 0 ${-r - 16} Q ${r + 6} ${-r - 18} ${r + 3} -2 Z`} fill={h.c} /><rect x={-r - 4} y={-12} width={2 * r + 8} height={14} rx={6} fill={h.c} stroke="#00000033" strokeWidth={2} /><circle cx={0} cy={-r - 18} r={7} fill={h.c} /></g>}
+    {h.kind === "cap" && <g><path d={`M ${-r - 2} -4 Q ${-r} ${-r - 14} 0 ${-r - 12} Q ${r} ${-r - 14} ${r + 2} -4 Z`} fill={h.c} /><path d={`M ${-r + 4} -6 L ${r + 26} -2 L ${r + 22} 6 L ${-r + 4} 2 Z`} fill={h.c} stroke="#00000033" strokeWidth={2} /></g>}
+    {h.kind === "ushanka" && <g><path d={`M ${-r - 6} 6 Q ${-r - 8} ${-r - 22} 0 ${-r - 20} Q ${r + 8} ${-r - 22} ${r + 6} 6 Z`} fill={h.c} /><rect x={-r - 12} y={-4} width={16} height={46} rx={8} fill={h.c} /><rect x={r - 4} y={-4} width={16} height={46} rx={8} fill={h.c} /><rect x={-r - 6} y={-14} width={2 * r + 12} height={14} rx={7} fill="#00000022" /></g>}
+  </g>
+);
+
+export const Person: React.FC<{ x: number; y: number; s?: number; flip?: boolean; look: Look; pose?: Pose; hood?: boolean; suit?: boolean; opacity?: number; head?: number; hat?: Hat; pack?: string; mustache?: boolean; apron?: string }> = ({ x, y, s = 1, flip, look, pose = {}, suit, opacity = 1, head = 1, hat, pack, mustache, apron }) => {
   const p = pose;
   const amp = p.amp ?? 0, ph = p.walk ?? 0, sit = p.sit ?? 0, t = p.t ?? 0;
   const sw = Math.sin(ph) * 32 * amp;
@@ -146,11 +155,14 @@ export const Person: React.FC<{ x: number; y: number; s?: number; flip?: boolean
         <Leg sx={-17} h={lLh} k={lLk} />
         <Leg sx={17} h={lRh} k={lRk} />
         <g transform={`rotate(${p.lean ?? 0} 0 ${hipY})`}>
+          {pack && <rect x={-50} y={torsoTop + 8} width={100} height={(hipY + 8) - (torsoTop + 8) + 14} rx={16} fill={pack} stroke="#00000044" strokeWidth={3} />}
           <Arm sx={-44} a={aRs} e={aRe} side={1} held={p.heldR} />
           {/* корпус */}
           <path d={`M -38 ${torsoTop + 8} Q -46 ${torsoTop + 4} -44 ${torsoTop + 24} L -38 ${hipY + 8} L 38 ${hipY + 8} L 44 ${torsoTop + 24} Q 46 ${torsoTop + 4} 38 ${torsoTop + 8} Q 0 ${torsoTop - 6} -38 ${torsoTop + 8} Z`} fill={top} />
           <path d={`M -38 ${hipY - 6} L 38 ${hipY - 6} L 38 ${hipY + 8} L -38 ${hipY + 8} Z`} fill={top2} opacity={0.5} />
           <path d={`M -14 ${torsoTop + 2} Q 0 ${torsoTop + 18} 14 ${torsoTop + 2}`} stroke={top2} strokeWidth={4} fill="none" />
+          {apron && <path d={`M -30 ${torsoTop + 40} L 30 ${torsoTop + 40} L 36 ${hipY + 40} L -36 ${hipY + 40} Z`} fill={apron} opacity={0.95} />}
+          {pack && [-26, 26].map((q) => <line key={q} x1={q} y1={torsoTop + 6} x2={q * 0.9} y2={hipY - 10} stroke={pack} strokeWidth={9} opacity={0.9} />)}
           <Arm sx={44} a={aLs} e={aLe} side={-1} held={p.heldL} />
           {/* шея и голова */}
           <g transform={`translate(0,${torsoTop - 4}) rotate(${p.tilt ?? 0})`}>
@@ -170,6 +182,8 @@ export const Person: React.FC<{ x: number; y: number; s?: number; flip?: boolean
                 <g>
                   <Face look={look} expr={expr} lk={lk} up={p.lookUp ?? 0} blink={!!p.blink} talk={talk} />
                   <Hair look={look} r={hr} />
+                  {mustache && <path d="M -17 13 Q -8 6 0 11 Q 8 6 17 13 Q 9 21 0 16 Q -9 21 -17 13 Z" fill="#2a1d14" />}
+                  {hat && <g transform="translate(0,-17)"><HatShape h={hat} r={hr} /></g>}
                   {look.glasses && <g stroke="#222" strokeWidth={2.5} fill="none"><circle cx={-14} cy={-2} r={10} /><circle cx={14} cy={-2} r={10} /><line x1={-4} y1={-2} x2={4} y2={-2} /></g>}
                 </g>
               )}

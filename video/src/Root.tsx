@@ -24,6 +24,7 @@ import { BlackoutVideo60, BLACKOUT60_FRAMES } from "./blackout/Blackout60";
 import { MindVideo, MIND_FRAMES } from "./mind/Mind";
 import { BunkerVideo, BUNKER_FRAMES, BunkerShort, BUNKER_SHORT_FRAMES } from "./bunker/Bunker";
 import { BunkerThumb } from "./bunker/Thumb";
+import { GoshaEp1, GOSHA_FRAMES } from "./gosha/Gosha";
 import { BiletThumb, BiletThumb2 } from "./bilet/Thumb";
 import { BiletShort, SHORT_FRAMES } from "./bilet/Short";
 import { DURATION_FRAMES as BILET_FRAMES } from "./bilet/timeline";
@@ -159,6 +160,7 @@ export const RemotionRoot: React.FC = () => {
       <Composition id="MindVideo" component={MindVideo} durationInFrames={MIND_FRAMES} fps={30} width={1920} height={1080} />
       <Composition id="BunkerVideo" component={BunkerVideo} durationInFrames={BUNKER_FRAMES} fps={30} width={1920} height={1080} />
       <Composition id="BunkerShort" component={BunkerShort} durationInFrames={BUNKER_SHORT_FRAMES} fps={30} width={1080} height={1920} />
+      <Composition id="GoshaEp1" component={GoshaEp1} durationInFrames={GOSHA_FRAMES} fps={30} width={1080} height={1920} />
       <Composition id="BunkerThumb" component={BunkerThumb} durationInFrames={1} fps={30} width={1920} height={1080} />
       <Composition id="Mini3D" component={Mini3D} durationInFrames={10} fps={24} width={640} height={360} />
       <Still id="A80Model" component={A80Model} width={1920} height={1080} />
